@@ -1,0 +1,4 @@
+services:
+#    stat.example:
+#        class: Arii\StatBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
