@@ -3,16 +3,47 @@
 {% block body %}
 
  <script type="text/javascript">
+
+
  dhtmlxEvent(window, "load", function(){
    var layout          = new dhtmlXLayoutObject(document.body, "3L");
+   var layout1 = layout.cells("a").attachLayout("2E");
+
    var menu            = layout.attachMenu();
    var toolbar         = layout.attachToolbar();
-   var jobGrid         = layout.cells("a").attachGrid();
+   var jobGrid         = layout1.cells("b").attachGrid();
    var tabbar          = layout.cells("b").attachTabbar();
    var dataFrameGrid   = layout.cells("c").attachGrid();
 
 
-   layout.cells("a").setText("Jobs");
+   layout1.cells("a").setText("Menu");
+   layout1.cells("a").setHeight(220);
+
+   globalMenu = layout1.cells("a").attachMenu();
+   globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
+   globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
+
+
+   myTabs = layout1.cells("a").attachTabbar();
+   myTabs.addTab("a1","{{ "Welcome" | trans }}","100px", null, true);
+   myTabs.addTab("a2","{{ "Advanced" | trans }}","100px", null, true);
+
+   myRibbon = myTabs.cells("a1").attachRibbon();
+   myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
+   myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
+   myRibbon.attachEvent("onStateChange", StateRibbon );
+   myRibbon.attachEvent("onClick", ClickRibbon );
+   myTabs.cells("a1").setActive();
+   myFormDate = myTabs.cells("a2").attachForm();
+   myFormDate.loadStruct("{{url('xml_JID_job_date_form')}}");
+
+
+
+
+
+   layout1.cells("b").setText("Jobs");
+
+
    layout.cells("b").setText("Charts");
    layout.cells("a").setWidth(500);
    layout.cells("c").setText("Historique");

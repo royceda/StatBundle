@@ -1,3 +1,10 @@
 stat_homepage:
-    path:     /stat/{name}
+    path:     /stat
     defaults: { _controller: StatBundle:Default:index }
+
+#box_chart:
+#  path: /boxplot
+#pie_chart:
+#  path: /piechart
+#line_chart:
+#  path: /linechart
