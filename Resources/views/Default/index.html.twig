@@ -1,19 +1,19 @@
 {# src/Arii/StatBundle/Resources/views/Default/index.html.twig #}
 {% extends "AriiJIDBundle::layout.html.twig" %}
 {% block body %}
+<script type="text/javascript">
 
- <script type="text/javascript">
+dhtmlxEvent(window, "load", function(){
+  var layout          = new dhtmlXLayoutObject(document.body, "3L");
+  var layout1         = layout.cells("a").attachLayout("2E");
+
+  var menu            = layout.attachMenu();
+  var toolbar         = layout.attachToolbar();
+  var jobGrid         = layout1.cells("b").attachGrid();
+  var tabbar          = layout.cells("b").attachTabbar();
+  var dataFrameGrid   = layout.cells("c").attachGrid();
 
 
- dhtmlxEvent(window, "load", function(){
-   var layout          = new dhtmlXLayoutObject(document.body, "3L");
-   var layout1 = layout.cells("a").attachLayout("2E");
-
-   var menu            = layout.attachMenu();
-   var toolbar         = layout.attachToolbar();
-   var jobGrid         = layout1.cells("b").attachGrid();
-   var tabbar          = layout.cells("b").attachTabbar();
-   var dataFrameGrid   = layout.cells("c").attachGrid();
 
 
    layout1.cells("a").setText("Menu");
@@ -38,14 +38,9 @@
    myFormDate.loadStruct("{{url('xml_JID_job_date_form')}}");
 
 
-
-
-
    layout1.cells("b").setText("Jobs");
-
-
    layout.cells("b").setText("Charts");
-   layout.cells("a").setWidth(500);
+   layout.cells("a").setWidth(450);
    layout.cells("c").setText("Historique");
 
    tabbar.addTab("a1", "Table"    , "100px", null, true);
@@ -53,9 +48,11 @@
    tabbar.addTab("a3", "chartplot", "100px");
    tabbar.addTab("a4", "piePlot"  , "100px");
 
-   tabbar.cells('a4').attachURL("./tempChart/pieChart.html");
-   tabbar.cells('a3').attachURL("./tempChart/lineChart.html");
-   tabbar.cells('a2').attachURL("./tempChart/boxChart.html");
+   tabbar.cells('a4').attachURL("{{url('pie_chart')}}");
+   tabbar.cells('a3').attachURL("{{url('line_chart')}}");
+   tabbar.cells('a2').attachURL("{{url('box_chart')}}");
+   //var statGrid = tabbar.cells('a1').attachGrid();
+   //statGrid.load("{{url('dataframe_xml')}}");
 
 
    //contactForm.loadStruct("data/form.xml");
@@ -69,7 +66,9 @@
    jobGrid.setInitWidths("100,*");
    jobGrid.setColAlign("left,left");
    jobGrid.init();
-   jobGrid.load("./tempChart/jobs.xml");
+   jobGrid.load("{{ url('jobs_xml')}}");
+   // jobGrid.load( "{{ url('xml_JID_jobs_grid', {bool : 'false'}) }}");
+
 
 
    //grid dataframe
@@ -78,10 +77,10 @@
    dataFrameGrid.setHeader("ID, Spooler, Job_Name, Start_date, Duration, STEPS, PARAMETERS");
    dataFrameGrid.setColSorting("str,str,str,str,int,str,str");
    //dataFrameGrid.setColTypes("ro, ro, ro, ro, ro, ro, ro");
-   dataFrameGrid.setInitWidths("75,250,250,250,250,250,250");
+   dataFrameGrid.setInitWidths("100,150,250,250,250,250,250");
    dataFrameGrid.setColAlign("left, left, left, left, left, left,left");
    dataFrameGrid.init();
-   dataFrameGrid.load("./tempChart/dataframe.xml");
+   dataFrameGrid.load("{{url('dataframe_xml')}}");
 
 
 
@@ -94,8 +93,8 @@
    statGrid.setInitWidths("200,100,*,100,100,100,100,100");
    statGrid.setColAlign("left,center,center,center,center,center,center,center");
    statGrid.init();
-   statGrid.load("./tempChart/gridStat.xml");
-
+   //statGrid.load("./tempChart/gridStat.xml");
+   statGrid.load("{{url('describe_xml')}}");
 
 
    //toolbar.setIconsPath("icons/");

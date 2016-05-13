@@ -2,9 +2,33 @@ stat_homepage:
     path:     /stat
     defaults: { _controller: StatBundle:Default:index }
 
-#box_chart:
-#  path: /boxplot
-#pie_chart:
-#  path: /piechart
-#line_chart:
-#  path: /linechart
+########## Charts ##################################
+
+
+box_chart:
+  path: /boxplot
+  defaults: { _controller: StatBundle:Default:boxplot }
+
+
+pie_chart:
+  path: /piechart
+  defaults: { _controller: StatBundle:Default:piechart }
+
+line_chart:
+  path: /linechart
+  defaults: { _controller: StatBundle:Default:linechart }
+
+### data ####
+
+dataframe_xml:
+  path: /dataframe
+  defaults: { _controller: StatBundle:Default:dataframe }
+
+
+describe_xml:
+  path: /describe
+  defaults: { _controller: StatBundle:Default:describe }
+
+jobs_xml:
+  path: /tempChart/jobs_xml
+  defaults: { _controller: StatBundle:Default:jobs }
