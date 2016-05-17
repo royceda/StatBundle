@@ -2,33 +2,41 @@ stat_homepage:
     path:     /stat
     defaults: { _controller: StatBundle:Default:index }
 
+
+
 ########## Charts ##################################
-
-
 box_chart:
   path: /boxplot
-  defaults: { _controller: StatBundle:Default:boxplot }
+  defaults: { _controller: StatBundle:Chart:boxplot }
 
 
 pie_chart:
   path: /piechart
-  defaults: { _controller: StatBundle:Default:piechart }
+  defaults: { _controller: StatBundle:Chart:piechart }
 
 line_chart:
   path: /linechart
-  defaults: { _controller: StatBundle:Default:linechart }
+  defaults: { _controller: StatBundle:Chart:linechart }
 
 ### data ####
 
 dataframe_xml:
   path: /dataframe
-  defaults: { _controller: StatBundle:Default:dataframe }
+  defaults: { _controller: StatBundle:Data:dataframe }
 
 
 describe_xml:
   path: /describe
-  defaults: { _controller: StatBundle:Default:describe }
+  defaults: { _controller: StatBundle:Data:describe }
 
-jobs_xml:
-  path: /tempChart/jobs_xml
+Stat_jobs_xml:
+  path: /jobs_xml
   defaults: { _controller: StatBundle:Default:jobs }
+
+Stat_jobs_date_xml:
+  path: /jobs_xml_date/from={date1}/to={date2}
+  defaults: { _controller: StatBundle:Default:datedJobs}
+
+Stat_job_history_xml:
+  path: /job_xml_history/
+  defaults: { _controller: StatBundle:Default:historyJob}
