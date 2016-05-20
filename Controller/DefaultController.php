@@ -20,18 +20,18 @@ class DefaultController extends Controller
 );
 
 
-  /* CHART */
-    public function indexAction()
-    {
-        return $this->render('StatBundle:Default:index.html.twig');
-    }
+/* CHART */
+public function indexAction()
+{
+  return $this->render('StatBundle:Default:index.html.twig');
+}
 
 
 
-    public function jobsAction(){
+public function jobsAction(){
       $request = Request::createFromGlobals();
       if ($request->get('history')>0) {
-          $history_max = $request->get('history');
+        $history_max = $request->get('history');
       }
       $stopped = $request->get('only_warning');
 
@@ -50,6 +50,8 @@ class DefaultController extends Controller
       </afterInit>
       </head>';
       ksort($Jobs);
+
+      //print_r($Jobs);
 
       foreach ($Jobs as $k=>$job) {
           if (isset($job['runs'])) {

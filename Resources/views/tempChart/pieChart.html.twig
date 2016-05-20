@@ -5,13 +5,21 @@
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['State', 'Jobs'],
-          ['slow',      2],
-          ['Too slow', 1],
-          ['very slow',  2],
-          ['In Time',     20]
-        ]);
+
+        var json = {
+    cols: [{id: 'task', label: 'Task', type: 'string'},
+           {id: 'hours', label: 'Hours per Day', type: 'number'}],
+    rows: [{c:[{v: 'Work'}, {v: 11}]},
+           {c:[{v: 'Eat'}, {v: 2}]},
+           {c:[{v: 'Commute'}, {v: 2}]},
+           {c:[{v: 'Playstation'}, {v: 2}]},
+           {c:[{v: 'Sleep'}, {v:7, f:'7.000'}]}]
+    };
+
+        var data = new google.visualization.DataTable(json);
+
+
+
 
         var options = {
           title: 'Jobs states',

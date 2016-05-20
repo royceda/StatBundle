@@ -28,7 +28,8 @@ dhtmlxEvent(window, "load", function(){
   myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
   myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
   myRibbon.attachEvent("onStateChange", StateRibbon );
-  myRibbon.attachEvent("onClick", ClickRibbon );
+  myRibbon.attachEvent("onClick", ClickRibbon);
+  //il y a un petit bug quand on change de db
   myTabs.cells("a1").setActive();
   myFormDate = myTabs.cells("a2").attachForm();
   myFormDate.loadStruct("{{url('xml_JID_job_date_form')}}");
@@ -47,6 +48,22 @@ dhtmlxEvent(window, "load", function(){
   tabbar.addTab("a2", "boxplot"  , "100px");
   tabbar.addTab("a3", "chartplot", "100px");
   tabbar.addTab("a4", "piePlot"  , "100px");
+  tabbar.addTab("a5", "anomalies", "100px");
+
+  aGrid = tabbar.cells("a5").attachGrid();
+  aGrid.setImagePath("codebase/imgs/");
+  aGrid.setIconsPath("icons/");
+  aGrid.setHeader("ID,START_TIME,CAUSE,duration");
+  aGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter");
+  aGrid.setColTypes("ro,ro,ro,ro");
+  aGrid.setInitWidths("200,200,200,200");
+  aGrid.setColAlign("left,left,left,left");
+  aGrid.enableSmartRendering(true, 15);
+  aGrid.init();
+  aGrid.load("{{ url('anomaly_xml')}}");
+
+
+
 
   tabbar.cells('a4').attachURL("{{url('pie_chart')}}");
   tabbar.cells('a3').attachURL("{{url('line_chart')}}");
@@ -64,32 +81,13 @@ dhtmlxEvent(window, "load", function(){
   jobGrid.setHeader("Spooler,Job_Name,Start_Time");
   jobGrid.attachHeader("#select_filter,#text_filter,#text_filter");
   jobGrid.setColTypes("ro,ro,ro");
-  jobGrid.setInitWidths("100,165,*");
+  jobGrid.setInitWidths("100,*,165");
   jobGrid.setColAlign("left,left,left");
   jobGrid.enableSmartRendering(true, 15);
   jobGrid.init();
   jobGrid.load("{{ url('Stat_jobs_xml')}}");
   jobGrid.attachEvent("onRowDblClicked", function JobDetail(rId, cInd){
     layout.cells("c").progressOn();
-
-    //myForm.load("{{ url('Stat_job_history_xml') }}?id="+id);
-    // mise a jour de la toolbar
-    //var status = jobGrid.cells(id, 3 ).getValue();
-    //myDetailToolbar.showItem('unstop_job');
-    //myDetailToolbar.showItem('stop_job');
-    //myDetailToolbar.showItem('kill_task');
-    /*if (status== 'STOPPED') {
-        myDetailToolbar.hideItem('stop_job');
-    }
-    else {
-        myDetailToolbar.hideItem('unstop_job');
-    }
-    if (status!= 'RUNNING') {
-        myDetailToolbar.hideItem('kill_task');
-    }*/
-    //myParameters.load("{{ url('xml_JID_job_params') }}?id="+id );
-    //myHistory.clearAll();
-    //myHistory.load("{{ url('xml_JID_job_history') }}?id="+id );
     dataFrameGrid.clearAll();
     dataFrameGrid.load("{{ url('Stat_job_history_xml') }}?id="+rId, function (rId) {
       layout.cells("c").progressOff();
@@ -107,7 +105,20 @@ dhtmlxEvent(window, "load", function(){
   dataFrameGrid.setInitWidths("100,150,250,250,250,250,250");
   dataFrameGrid.setColAlign("left, left, left, left, left, left,left");
   dataFrameGrid.init();
-  dataFrameGrid.load("{{url('dataframe_xml')}}");
+  jobGrid.attachEvent("onRowDblClicked", function Analyze(rId, cInd){
+    layout.cells("b").progressOn();
+    statGrid.clearAll();
+    aGrid.clearAll();
+    var date1 = "{{app.session.get('past')}}";
+    var date2 = "{{app.session.get('future')}}" ;
+    statGrid.load("{{ url('describe_xml') }}?id="+rId+"&from="+date1+"&to="+date2, function (rId) {
+      aGrid.load("{{ url('anomaly_xml')}}");
+      layout.cells("b").progressOff();
+    });
+  });
+
+
+  //dataFrameGrid.load("{{url('dataframe_xml')}}");
 
 
 

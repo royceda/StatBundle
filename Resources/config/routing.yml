@@ -1,4 +1,4 @@
-stat_homepage:
+arii_stat:
     path:     /stat
     defaults: { _controller: StatBundle:Default:index }
 
@@ -23,6 +23,10 @@ line_chart:
 dataframe_xml:
   path: /dataframe
   defaults: { _controller: StatBundle:Data:dataframe }
+
+anomaly_xml:
+  path: /anomaly
+  defaults: { _controller: StatBundle:Data:anomaly}
 
 
 describe_xml:
