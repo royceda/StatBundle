@@ -137,11 +137,11 @@ def df2xml1(df):
 
 def anomaly(df):
     'from dataframe found patological cases'
-    max1 = df.describe().loc['75%']['duration']
+    max1 = df.duration.quantile(0.95)
     if(math.isnan(max1)):
         return pd.DataFrame()
     else:
-        query = 'duration > '+str(max1)
+        query = 'duration >= '+str(max1)
         tmp = pd.DataFrame(df.query(query), columns=['ID', 'START_TIME', 'CAUSE', 'duration']);
         return tmp;
 
@@ -195,7 +195,7 @@ def study_frame( df, start, end, tab = []):
 
 
 
-def df2json(df):
+def df2jsonLine(df):
     n    = df.index.size
     arr1 = df.index;
     #arr2 = df.columns
@@ -215,3 +215,29 @@ def df2json(df):
             json += ','
     json += ']}'
     return json
+
+
+
+
+def df2jsonPie(df):
+    v75  = df.duration.quantile(0.75)
+    v95  = df.duration.quantile(0.95)
+    vmax = v95 + (v95 - v75)
+
+    mapPie = {
+        'normal'    : df.query('duration <= '+str(v75)).index.size,
+        'slow'      : df.query(str(v75)+'<= duration <= '+str(v95)).index.size,
+        'very slow' : df.query(str(v95)+'<= duration <= '+str(vmax)).index.size,
+        'too slow'  : df.query(str(vmax)+'<= duration').index.size
+    }
+
+    json = '{"cols":'
+    json +=  '[{"id": "type", "label": "Type", "type": "string"},'
+    json +='{"id": "hours", "label": "Hours per Day", "type": "number"}],'
+    json += '"rows":'
+    json += '[{"c":[{"v": "Slow"}, {"v":'+ str(mapPie['slow'])+'}]},'
+    json +='{"c":[{"v": "Too slow"},{"v":'+ str(mapPie['too slow'])+'}]},'
+    json += '{"c":[{"v": "very slow"}, {"v":'+ str(mapPie['very slow'])+'}]},'
+    json += '{"c":[{"v": "Normal"}, {"v":'+ str(mapPie['normal'])+'}]}]}'
+
+    return json;

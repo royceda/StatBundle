@@ -59,13 +59,14 @@ try:
     start = "2015-01-01"
     tmp = study_frame(df, start, end)
     #print tmp
-    json = df2json(tmp)
+    json = df2jsonLine(tmp)
     writeXML('../views/tempChart/lineChart.json.twig', json);
     #print json
 
 
     #PieCHart
-
+    json = df2jsonPie(df)
+    writeXML('../views/tempChart/pieChart.json.twig', json);
 
     #boxplot
 
