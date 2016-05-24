@@ -32,8 +32,8 @@ try:
     pd.DataFrame();
     name = str(sys.argv[1]);
     spooler = str(sys.argv[2]);
-    start = str(sys.argv[3]);
-    end = str(sys.argv[4]);
+    start = str(sys.argv[3]) +" "+ str(sys.argv[4]);
+    end = str(sys.argv[5]) +" "+ str(sys.argv[6]);
 
     #name = "ACV/check_open_event_0_AID_M001DWSCOACV"
     #spooler = "jsapp"
@@ -54,8 +54,11 @@ try:
     writeXML('../views/tempChart/anoStat.xml.twig', xml);
     #print xml
 
-    #lineChart temps moyen et nombre d'Anomalies potentielles
-    tmp = study_frame(df, jsapp);
+
+    #linechart
+    start = "2015-01-01"
+    tmp = study_frame(df, start, end)
+    #print tmp
     json = df2json(tmp)
     writeXML('../views/tempChart/lineChart.json.twig', json);
     #print json

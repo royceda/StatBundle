@@ -157,15 +157,21 @@ def mean(df):
     return df.describe()['duration']['mean']
 
 
-def study_frame( df, tab = []):
+def study_frame( df, start, end, tab = []):
     #df         = create_dataframe(name, config2)
     periods    = []
     means      = []
     numAnormal = []
     num        = tab
     anormal    = []
-    for year in range(2014,2017):
-        for i in range(1,13):
+
+    miny = int(start.split('-')[0])
+    maxy = int(end.split('-')[0])
+    minm = int(start.split('-')[1])
+    maxm = int(end.split('-')[1])
+
+    for year in range(miny,maxy+1):
+        for i in range(minm, maxm+1):
             if(i == 12):
                 start_date = str(year)+"-"+str(i)+"-01 00:00:00"
                 end_date = str(year+1)+"-01-01 23:59:59"
@@ -173,12 +179,13 @@ def study_frame( df, tab = []):
                 start_date = str(year)+"-"+str(i)+"-01 00:00:00"
                 end_date = str(year)+"-"+str(i+1)+"-01 23:59:59"
             tmp = filter_date(df, start_date, end_date)
-            means.append(mean(tmp))
-            periods.append(datetime.strptime(start_date, date_format))
-            ano = anomalyByDate(tmp, start_date, end_date)
-            anormal.append(ano)
-            numAnormal.append(ano.index.size);
-            #num.append( nJobs(config2['spooler'], start_date, end_date, config2))
+            if(math.isnan(mean(tmp)) == False):
+                means.append(mean(tmp))
+                periods.append(datetime.strptime(start_date, date_format))
+                ano = anomalyByDate(tmp, start_date, end_date)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+                #num.append( nJobs(config2['spooler'], start_date, end_date, config2))
     frame = pd.DataFrame()
     frame['period'] = pd.Series(periods)
     frame['mean']   = pd.Series(means)
@@ -190,9 +197,12 @@ def study_frame( df, tab = []):
 
 def df2json(df):
     n    = df.index.size
-    m    = df.columns.size;
     arr1 = df.index;
-    arr2 = df.columns
+    #arr2 = df.columns
+    #m    = df.columns.size;
+    arr2 = ['period', 'mean', 'anormal']
+    m = 3
+
     json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"anormal", "type":"number"} ] ,"rows":['
     for i in range(0, n):
         json += '{"c": ['

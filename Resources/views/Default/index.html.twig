@@ -113,6 +113,9 @@ dhtmlxEvent(window, "load", function(){
     var date2 = "{{app.session.get('future')}}" ;
     statGrid.load("{{ url('describe_xml') }}?id="+rId+"&from="+date1+"&to="+date2, function (rId) {
       aGrid.load("{{ url('anomaly_xml')}}");
+      tabbar.cells('a4').attachURL("{{url('pie_chart')}}",null, true);
+      tabbar.cells('a3').attachURL("{{url('line_chart')}}",null, true);
+      tabbar.cells('a2').attachURL("{{url('box_chart')}}",null, true);
       layout.cells("b").progressOff();
     });
   });
