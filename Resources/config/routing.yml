@@ -14,9 +14,17 @@ pie_chart:
   path: /piechart
   defaults: { _controller: StatBundle:Chart:piechart }
 
+pie_chart_json:
+  path: /piechart.json
+  defaults: { _controller: StatBundle:Data:piechart }
+
 line_chart:
   path: /linechart
   defaults: { _controller: StatBundle:Chart:linechart }
+
+line_chart_json:
+  path: /linechart.json
+  defaults: { _controller: StatBundle:Data:linechart }
 
 ### data ####
 

@@ -8,8 +8,20 @@ import time
 import math
 
 
-
 date_format = "%Y-%m-%d %H:%M:%S"
+
+#depuis 2014
+#jsapp
+jsapp = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 218306, 92897, 116148, 114403, 132307, 529814, 110530, 11478, 15428, 14814, 24933, 54482, 40730, 15862, 0, 0, 0, 0, 0, 0, 0]
+
+
+#tsm_tlsp1: l'obtention est trop longue pour le notebook
+tsm_tlsp1 = [0, 0, 0, 2328, 23361, 183242, 385607, 418031, 399328, 411786, 400016, 404987, 410094, 375845, 410611, 408610, 434860, 408772, 423007, 448903, 429273, 455137, 430230, 455221, 475069, 456360, 492839, 458865, 173785, 0, 0, 0, 0, 0, 0, 0]
+
+
+#tsm_tlsp2: l'obtention est trop longue pour le notebook
+tsm_tlsp2=[0, 0, 0, 1704, 16306, 16779, 278894, 304559, 304290, 327167, 324517, 337017, 348491, 321196, 359922, 359322, 379894, 376229, 399152, 408389, 400433, 426923, 427722, 446968, 499442, 496017, 544427, 530293, 210679, 0, 0, 0, 0, 0, 0, 0]
+
 
 config1 = { 'dbname'   : 'jsapp',
             'user'     : 'arii',
@@ -33,25 +45,24 @@ spool = { 'tsm_tlsp1' : config2,
 
 def create_dataframe(name, spooler, conf, lim=100000):
     #spooler = conf['spooler'];
-    #try:
-    conn = psycopg2.connect("dbname='"+conf['dbname']+"' user='"+conf['user']+"' host='"+conf['host']+"' password='"+conf['password']+"'");
-    if(name != None):
-        df = pd.read_sql_query('select * from scheduler_history as sh where sh."JOB_NAME" = \''+name+'\' and sh."SPOOLER_ID" =\''+spooler+'\' limit '+str(lim)+';',con=conn)
-        tab = []
-        for i in range(0, len(df)):
-            epoch1 = int(time.mktime(time.strptime(str(df['START_TIME'][i]), date_format)));
-            epoch2 = int(time.mktime(time.strptime(str(df['END_TIME'][i]), date_format)));
-            tab.append(epoch2 - epoch1)
-        serie = pd.Series(tab)
-        df['duration'] = serie;
-    else:
-        df = pd.read_sql_query('select * from scheduler_history as sh limit '+str(lim)+';',con=conn)
-        #print("connection: ok")
-    conn.close();
-    return df;
-    #except:
-    #    print("I am unable to connect to the database");
+    try:
+        conn = psycopg2.connect("dbname='"+conf['dbname']+"' user='"+conf['user']+"' host='"+conf['host']+"' password='"+conf['password']+"'");
+        if(name != None):
+            df = pd.read_sql_query('select * from scheduler_history as sh where sh."JOB_NAME" = \''+name+'\' and sh."SPOOLER_ID" =\''+spooler+'\' limit '+str(lim)+';',con=conn)
+            tab = []
+            for i in range(0, len(df)):
+                epoch1 = int(time.mktime(time.strptime(str(df['START_TIME'][i]), date_format)));
+                epoch2 = int(time.mktime(time.strptime(str(df['END_TIME'][i]), date_format)));
+                tab.append(epoch2 - epoch1)
+            serie = pd.Series(tab)
+            df['duration'] = serie;
+        else:
+            df = pd.read_sql_query('select * from scheduler_history as sh limit '+str(lim)+';',con=conn)
 
+        #print("connection: ok")
+        return df;
+    except:
+        print("I am unable to connect to the database");
 
 
 def produce_box(df):
@@ -65,7 +76,7 @@ def produce_box(df):
 
 
 def filter_date(df, start_date, end_date):
-    mask = (df['START_TIME'] > start_date) & (df['START_TIME'] <= end_date);
+    mask = (df['START_TIME'] >= start_date) & (df['START_TIME'] <= end_date);
     return df.loc[mask];
 
 
@@ -124,7 +135,6 @@ def df2xml1(df):
 
 
 
-
 def anomaly(df):
     'from dataframe found patological cases'
     max1 = df.describe().loc['75%']['duration']
@@ -139,3 +149,59 @@ def anomaly(df):
 
 def anomalyByDate(df, start_date, end_date):
     return anomaly(filter_date(df, start_date, end_date))
+
+
+
+def mean(df):
+    'period mean'
+    return df.describe()['duration']['mean']
+
+
+def study_frame( df, tab = []):
+    #df         = create_dataframe(name, config2)
+    periods    = []
+    means      = []
+    numAnormal = []
+    num        = tab
+    anormal    = []
+    for year in range(2014,2017):
+        for i in range(1,13):
+            if(i == 12):
+                start_date = str(year)+"-"+str(i)+"-01 00:00:00"
+                end_date = str(year+1)+"-01-01 23:59:59"
+            else:
+                start_date = str(year)+"-"+str(i)+"-01 00:00:00"
+                end_date = str(year)+"-"+str(i+1)+"-01 23:59:59"
+            tmp = filter_date(df, start_date, end_date)
+            means.append(mean(tmp))
+            periods.append(datetime.strptime(start_date, date_format))
+            ano = anomalyByDate(tmp, start_date, end_date)
+            anormal.append(ano)
+            numAnormal.append(ano.index.size);
+            #num.append( nJobs(config2['spooler'], start_date, end_date, config2))
+    frame = pd.DataFrame()
+    frame['period'] = pd.Series(periods)
+    frame['mean']   = pd.Series(means)
+    frame['num']    = pd.Series(num)
+    frame['anormal'] = pd.Series(numAnormal)
+    return frame
+
+
+
+def df2json(df):
+    n    = df.index.size
+    m    = df.columns.size;
+    arr1 = df.index;
+    arr2 = df.columns
+    json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"anormal", "type":"number"} ] ,"rows":['
+    for i in range(0, n):
+        json += '{"c": ['
+        for j in range(0, m):
+            json += '{ "v" : "'+str(df[arr2[j]][arr1[i]])+'" }';
+            if( j < m-1):
+                json += ','
+        json += ']}'
+        if( i < n-1):
+            json += ','
+    json += ']}'
+    return json

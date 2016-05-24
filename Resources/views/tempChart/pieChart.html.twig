@@ -1,26 +1,19 @@
 <html>
   <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
 
-        var json = {
-    cols: [{id: 'task', label: 'Task', type: 'string'},
-           {id: 'hours', label: 'Hours per Day', type: 'number'}],
-    rows: [{c:[{v: 'Work'}, {v: 11}]},
-           {c:[{v: 'Eat'}, {v: 2}]},
-           {c:[{v: 'Commute'}, {v: 2}]},
-           {c:[{v: 'Playstation'}, {v: 2}]},
-           {c:[{v: 'Sleep'}, {v:7, f:'7.000'}]}]
-    };
+        var json = $.ajax({
+          url: "{{url('pie_chart_json')}}",
+          dataType : "json",
+          async : false
+        }).responseText;
 
-        var data = new google.visualization.DataTable(json);
-
-
-
-
+        var data = new google.visualization.DataTable(json, 0.6);
         var options = {
           title: 'Jobs states',
           is3D: true,
@@ -29,6 +22,7 @@
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
       }
+
     </script>
   </head>
   <body>

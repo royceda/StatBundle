@@ -28,7 +28,6 @@ class DataController extends Controller
     $from = $request->query->get('from');
     $to = $request->query->get('to');
 
-
     $dhtmlx = $this->container->get('arii_core.dhtmlx');
     $sql = $this->container->get('arii_core.sql');
     $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
@@ -42,17 +41,21 @@ class DataController extends Controller
     $spooler =  $Infos['SPOOLER_ID'];
     $name    =  $Infos['JOB_NAME'];
 
+    //echo $spooler;
+    //echo $name;
+
     //echo passthru('/usr/bin/python --version', $status);
     //$query1 = "ls /usr/local/lib/python2.7/dist-packages";
     //echo exec($query1, $output, $status);
     $query = 'cd /home/arii/Symfony/src/Arii/StatBundle/Resources/AriiStatPython/; ';
-    $query .= "python2.7 script.py ".$name." ".$spooler." ".$from." ".$to;
+    $query .= "python script.py ".$name." ".$spooler." ".$from." ".$to;
 
+    //echo $query;
 
-    // penser a faire avec les intervals de date
     $output = system($query);
     //echo passthru($query1, $status);
     //echo $status;
+
 
     $response = new Response();
     $response->headers->set('Content-Type', 'text/xml');
@@ -62,17 +65,28 @@ class DataController extends Controller
   }
 
 
-
   public function index2Action($name){
       return $this->render('StatBundle:Default:index.html.twig', array('name' => $name));
   }
 
 
+  public function anomalyAction(){
+    $response = new Response();
+    $response->headers->set('Content-Type', 'text/xml');
+    return $this->render('StatBundle:tempChart:anoStat.xml.twig',array(), $response );
+  }
 
-    public function anomalyAction(){
-      $response = new Response();
-      $response->headers->set('Content-Type', 'text/xml');
-      return $this->render('StatBundle:tempChart:anoStat.xml.twig',array(), $response );
-    }
 
+  public function piechartAction(){
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    return $this->render('StatBundle:tempChart:pieChart.json.twig');
+  }
+
+
+  public function linechartAction(){
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    return $this->render('StatBundle:tempChart:lineChart.json.twig');
+  }
 }
