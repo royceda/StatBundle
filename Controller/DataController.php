@@ -89,4 +89,11 @@ class DataController extends Controller
     $response->headers->set('Content-Type', 'application/json');
     return $this->render('StatBundle:tempChart:lineChart.json.twig');
   }
+
+  public function boxplotAction(){
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    return $this->render('StatBundle:tempChart:boxChart.json.twig');
+  }
+
 }

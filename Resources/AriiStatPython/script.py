@@ -69,6 +69,8 @@ try:
     writeXML('../views/tempChart/pieChart.json.twig', json);
 
     #boxplot
+    json = df2jsonBox(df)
+    writeXML('../views/tempChart/boxChart.json.twig', json);
 
 except Exception, e:
     xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows><row><cell>ERROR</cell></row></rows>";

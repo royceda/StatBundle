@@ -83,8 +83,8 @@ dhtmlxEvent(window, "load", function(){
   jobGrid.setColTypes("ro,ro,ro");
   jobGrid.setInitWidths("100,*,165");
   jobGrid.setColAlign("left,left,left");
-  jobGrid.enableSmartRendering(true, 15);
   jobGrid.init();
+  jobGrid.enableSmartRendering(true, 10);
   jobGrid.load("{{ url('Stat_jobs_xml')}}");
   jobGrid.attachEvent("onRowDblClicked", function JobDetail(rId, cInd){
     layout.cells("c").progressOn();
@@ -192,11 +192,12 @@ dhtmlxEvent(window, "load", function(){
 
       //a changer car duplication de code de refresh
       var route2 = "{{ url('Stat_jobs_xml') }}";
-      route2 = route.replace("var", false);
+      //route2 = route.replace("var", false);
 
       layout1.cells("b").progressOn();
       jobGrid.load(route);
 
+      route2 = "{{ url('Stat_jobs_xml')}}";
       jobGrid.load(route2,function(){
         layout1.cells("b").progressOff();
         jobGrid.refreshFilters();

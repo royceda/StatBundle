@@ -7,11 +7,12 @@
 <body>
 <script src="http://www.d3plus.org/js/d3.js"></script>
 <script src="http://www.d3plus.org/js/d3plus.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 <div id="viz"></div>
 
 <script>
-  var data = [
+  /*var data = [
     {"year": 1991, "name":"alpha", "value": 15},
     {"year": 1992, "name":"alpha", "value": 34},
     {"year": 1991, "name":"alpha2", "value": 17},
@@ -28,7 +29,17 @@
     {"year": 1992, "name":"delta", "value": 43},
     {"year": 1991, "name":"delta2", "value": 17},
     {"year": 1992, "name":"delta2", "value": 35}
-  ]
+  ]*/
+
+  var data = $.ajax({
+    url: "{{url('box_chart_json')}}",
+    dataType : "jsonp",
+    async : false
+  }).responseText;
+
+
+data = [{ "year"  : "2016", "name" : "3687523.0", "value" :0},{ "year"  : "2016", "name" : "3687551.0", "value" :2},{ "year"  : "2016", "name" : "3689012.0", "value" :35},{ "year"  : "2016", "name" : "3689273.0", "value" :36},{ "year"  : "2016", "name" : "3689226.0", "value" :33},{ "year"  : "2016", "name" : "3689228.0", "value" :34},{ "year"  : "2016", "name" : "3694483.0", "value" :252},{ "year"  : "2016", "name" : "3694485.0", "value" :233},{ "year"  : "2016", "name" : "3696443.0", "value" :228},{ "year"  : "2016", "name" : "3696424.0", "value" :207},{ "year"  : "2016", "name" : "3696442.0", "value" :247},{ "year"  : "2016", "name" : "3696546.0", "value" :242},{ "year"  : "2016", "name" : "3696890.0", "value" :225},{ "year"  : "2016", "name" : "3697576.0", "value" :230},{ "year"  : "2016", "name" : "3699208.0", "value" :234},{ "year"  : "2016", "name" : "3701160.0", "value" :234},{ "year"  : "2016", "name" : "3703133.0", "value" :237},{ "year"  : "2016", "name" : "3705204.0", "value" :223},{ "year"  : "2016", "name" : "3707253.0", "value" :243},{ "year"  : "2016", "name" : "3709191.0", "value" :293},{ "year"  : "2016", "name" : "3711036.0", "value" :321},{ "year"  : "2016", "name" : "3712905.0", "value" :221},{ "year"  : "2016", "name" : "3718283.0", "value" :228},{ "year"  : "2016", "name" : "3737388.0", "value" :175},{ "year"  : "2016", "name" : "3745625.0", "value" :232},{ "year"  : "2016", "name" : "3739890.0", "value" :221},{ "year"  : "2016", "name" : "3741218.0", "value" :228},{ "year"  : "2016", "name" : "3742610.0", "value" :216},{ "year"  : "2016", "name" : "3743987.0", "value" :224},{ "year"  : "2016", "name" : "3747344.0", "value" :244},{ "year"  : "2016", "name" : "3749345.0", "value" :226},{ "year"  : "2016", "name" : "3751264.0", "value" :241},{ "year"  : "2016", "name" : "3753212.0", "value" :223},{ "year"  : "2016", "name" : "3755246.0", "value" :228},{ "year"  : "2016", "name" : "3757448.0", "value" :224},{ "year"  : "2016", "name" : "3759477.0", "value" :224},{ "year"  : "2016", "name" : "3761499.0", "value" :229},{ "year"  : "2016", "name" : "3763519.0", "value" :226},{ "year"  : "2016", "name" : "3765435.0", "value" :226},{ "year"  : "2016", "name" : "3767376.0", "value" :224},{ "year"  : "2016", "name" : "3769439.0", "value" :227},{ "year"  : "2016", "name" : "3771470.0", "value" :247},{ "year"  : "2016", "name" : "3773501.0", "value" :228},{ "year"  : "2016", "name" : "3775529.0", "value" :231},{ "year"  : "2016", "name" : "3777553.0", "value" :243},{ "year"  : "2016", "name" : "3779482.0", "value" :229},{ "year"  : "2016", "name" : "3781422.0", "value" :227},{ "year"  : "2016", "name" : "3783485.0", "value" :231},{ "year"  : "2016", "name" : "3785551.0", "value" :243},{ "year"  : "2016", "name" : "3787580.0", "value" :232},{ "year"  : "2016", "name" : "3789601.0", "value" :229},{ "year"  : "2016", "name" : "3791634.0", "value" :233},{ "year"  : "2016", "name" : "3793552.0", "value" :249},{ "year"  : "2016", "name" : "3795491.0", "value" :237},{ "year"  : "2016", "name" : "3797534.0", "value" :236},{ "year"  : "2016", "name" : "3799564.0", "value" :242},{ "year"  : "2016", "name" : "3801594.0", "value" :235},{ "year"  : "2016", "name" : "3803615.0", "value" :238},{ "year"  : "2016", "name" : "3805638.0", "value" :229},{ "year"  : "2016", "name" : "3807556.0", "value" :228},{ "year"  : "2016", "name" : "3809525.0", "value" :232},{ "year"  : "2016", "name" : "3811569.0", "value" :245},{ "year"  : "2016", "name" : "3813599.0", "value" :235},{ "year"  : "2016", "name" : "3815629.0", "value" :237},{ "year"  : "2016", "name" : "3817651.0", "value" :235},{ "year"  : "2016", "name" : "3819674.0", "value" :229},{ "year"  : "2016", "name" : "3821592.0", "value" :237},{ "year"  : "2016", "name" : "3823540.0", "value" :233},{ "year"  : "2016", "name" : "3825585.0", "value" :15494},{ "year"  : "2016", "name" : "3827615.0", "value" :242},{ "year"  : "2016", "name" : "3829666.0", "value" :239},{ "year"  : "2016", "name" : "3831687.0", "value" :225},{ "year"  : "2016", "name" : "3833708.0", "value" :248},{ "year"  : "2016", "name" : "3835627.0", "value" :245},{ "year"  : "2016", "name" : "3837565.0", "value" :231},{ "year"  : "2016", "name" : "3839642.0", "value" :240},{ "year"  : "2016", "name" : "3841708.0", "value" :245},{ "year"  : "2016", "name" : "3843736.0", "value" :232},{ "year"  : "2016", "name" : "3845758.0", "value" :243},{ "year"  : "2016", "name" : "3847788.0", "value" :132},{ "year"  : "2016", "name" : "3849707.0", "value" :138},{ "year"  : "2016", "name" : "3851644.0", "value" :139},{ "year"  : "2016", "name" : "3853688.0", "value" :128},{ "year"  : "2016", "name" : "3855718.0", "value" :238}];
+
   var visualization = d3plus.viz()
     .container("#viz")
     .data(data)

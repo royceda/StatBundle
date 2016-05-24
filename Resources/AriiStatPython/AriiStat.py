@@ -226,9 +226,9 @@ def df2jsonPie(df):
 
     mapPie = {
         'normal'    : df.query('duration <= '+str(v75)).index.size,
-        'slow'      : df.query(str(v75)+'<= duration <= '+str(v95)).index.size,
-        'very slow' : df.query(str(v95)+'<= duration <= '+str(vmax)).index.size,
-        'too slow'  : df.query(str(vmax)+'<= duration').index.size
+        'slow'      : df.query(str(v75)+'< duration <= '+str(v95)).index.size,
+        'very slow' : df.query(str(v95)+'< duration <= '+str(vmax)).index.size,
+        'too slow'  : df.query(str(vmax)+'< duration').index.size
     }
 
     json = '{"cols":'
@@ -241,3 +241,18 @@ def df2jsonPie(df):
     json += '{"c":[{"v": "Normal"}, {"v":'+ str(mapPie['normal'])+'}]}]}'
 
     return json;
+
+
+
+def df2jsonBox(df):
+    n    = df.index.size
+    arr1 = df.index;
+    arr2 = ['START_TIME', 'ID', 'duration']
+    m    = 3;
+    json = "["
+    for i in range(0, n):
+        json += '{ "year"  : "'+str("2016")+'", "name" : "'+str(df[arr2[1]][arr1[i]])+'", "value" :'+str(df[arr2[2]][arr1[i]])+'}'
+        if( i != n-1):
+            json+= ','
+    json +=']'
+    return json

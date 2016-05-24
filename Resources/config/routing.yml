@@ -9,6 +9,10 @@ box_chart:
   path: /boxplot
   defaults: { _controller: StatBundle:Chart:boxplot }
 
+box_chart_json:
+  path: /boxplot.json
+  defaults: { _controller: StatBundle:Data:boxplot }
+
 
 pie_chart:
   path: /piechart
