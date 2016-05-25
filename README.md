@@ -18,7 +18,7 @@ StatBundle is a Symfony bundle to complete the project [Arii](https://github.com
 
 ## Librairies
 ---
- StatBundle uses python to compute especially whith [Pandas librairy](www.github.com). So, you need to install the following packages which can be installed thanks to pip or easy_install:
+ StatBundle uses python to compute especially with [Pandas librairy](www.github.com). So, you need to install the following packages which can be installed thanks to [pip](https://pypi.python.org/pypi/pip) or [easy_install](http://peak.telecommunity.com/DevCenter/EasyInstall):
  * Numpy
  * Scipy
  * Matplotlib 
