@@ -141,7 +141,7 @@ def anomaly(df):
     if(math.isnan(max1)):
         return pd.DataFrame()
     else:
-        query = 'duration >= '+str(max1)
+        query = 'duration > '+str(max1)
         tmp = pd.DataFrame(df.query(query), columns=['ID', 'START_TIME', 'CAUSE', 'duration']);
         return tmp;
 

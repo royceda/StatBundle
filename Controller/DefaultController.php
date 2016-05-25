@@ -78,6 +78,8 @@ public function jobsAction(){
     public function datedJobsAction(Request $request, $date1, $date2){
       $request->getSession()->set('past', $date1 );
       $request->getSession()->set('future', $date2 );
+
+
       return  $this->redirectToRoute('Stat_jobs_xml');
     }
 
@@ -97,7 +99,6 @@ public function jobsAction(){
 
       $spooler =  $Infos['SPOOLER_ID'];
       $job     =  $Infos['JOB_NAME'];
-
 
 
       $ordered = $request->get('chained');
