@@ -84,16 +84,29 @@ class DataController extends Controller
   }
 
 
-  public function linechartAction(){
+  public function barchartAction(){
     $response = new Response();
     $response->headers->set('Content-Type', 'application/json');
-    return $this->render('StatBundle:tempChart:lineChart.json.twig');
+    return $this->render('StatBundle:tempChart:barChart.json.twig');
   }
 
   public function boxplotAction(){
     $response = new Response();
     $response->headers->set('Content-Type', 'application/json');
     return $this->render('StatBundle:tempChart:boxChart.json.twig');
+  }
+
+
+  public function linechartAction(){
+
+    $request = Request::createFromGlobals();
+    $period = $request->query->get('period');
+
+    
+
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+    return $this->render('StatBundle:tempChart:lineChart.json.twig');
   }
 
 }

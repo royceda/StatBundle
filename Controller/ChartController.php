@@ -19,6 +19,11 @@ class ChartController extends Controller
     return $this->render('StatBundle:tempChart:pieChart.html.twig');
   }
 
+  public function barchartAction()
+  {
+    return $this->render('StatBundle:tempChart:barChart.html.twig');
+  }
+
   public function linechartAction()
   {
     return $this->render('StatBundle:tempChart:lineChart.html.twig');

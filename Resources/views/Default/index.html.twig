@@ -44,19 +44,26 @@ dhtmlxEvent(window, "load", function(){
   layout.cells("a").setWidth(450);
   layout.cells("c").setText("Historique du job");
 
-  tabbar.addTab("a1", "Table"    , "100px", null, true);
-  tabbar.addTab("a2", "boxplot"  , "100px");
-  tabbar.addTab("a3", "chartplot", "100px");
-  tabbar.addTab("a4", "piePlot"  , "100px");
-  tabbar.addTab("a5", "anomalies", "100px");
+  tabbar.addTab("a1", "Description"    , "100px", null, true);
+  tabbar.addTab("a2", "Whiskers"  , "100px");
+  tabbar.addTab("a3", "Histogram", "100px");
+  tabbar.addTab("a4", "Pie"  , "100px");
+  tabbar.addTab("a5", "Duration", "100px");
 
-  aGrid = tabbar.cells("a5").attachGrid();
+
+  aLayout = tabbar.cells("a4").attachLayout("2U");
+  aLayout.cells("a").setText("Pie");
+  aLayout.cells("a").setWidth("450");
+  aLayout.cells("a").attachURL("{{url('pie_chart')}}");
+  aLayout.cells("b").setText("Anomaly");
+  aGrid = aLayout.cells("b").attachGrid();
+
   aGrid.setImagePath("codebase/imgs/");
   aGrid.setIconsPath("icons/");
   aGrid.setHeader("ID,START_TIME,CAUSE,duration");
   aGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter");
   aGrid.setColTypes("ro,ro,ro,ro");
-  aGrid.setInitWidths("200,200,200,200");
+  aGrid.setInitWidths("200,200,200,*");
   aGrid.setColAlign("left,left,left,left");
   aGrid.enableSmartRendering(true, 15);
   aGrid.init();
@@ -65,8 +72,8 @@ dhtmlxEvent(window, "load", function(){
 
 
 
-  tabbar.cells('a4').attachURL("{{url('pie_chart')}}");
-  tabbar.cells('a3').attachURL("{{url('line_chart')}}");
+  tabbar.cells('a5').attachURL("{{url('line_chart')}}");
+  tabbar.cells('a3').attachURL("{{url('bar_chart')}}");
   tabbar.cells('a2').attachURL("{{url('box_chart')}}");
   //var statGrid = tabbar.cells('a1').attachGrid();
   //statGrid.load("{{url('dataframe_xml')}}");
@@ -120,8 +127,9 @@ dhtmlxEvent(window, "load", function(){
 
     statGrid.load("{{ url('describe_xml') }}?id="+rId+"&from="+date1+"&to="+date2, function (rId) {
       aGrid.load("{{ url('anomaly_xml')}}");
-      tabbar.cells('a4').attachURL("{{url('pie_chart')}}",null, true);
-      tabbar.cells('a3').attachURL("{{url('line_chart')}}",null, true);
+      aLayout.cells("a").attachURL("{{url('pie_chart')}}");
+      //tabbar.cells('a4').attachURL("{{url('pie_chart')}}",null, true);
+      tabbar.cells('a3').attachURL("{{url('bar_chart')}}",null, true);
       tabbar.cells('a2').attachURL("{{url('box_chart')}}",null, true);
       layout.cells("b").progressOff();
     });

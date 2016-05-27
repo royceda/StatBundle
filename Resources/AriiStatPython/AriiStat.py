@@ -1,12 +1,11 @@
 
 import numpy as np;
 import pandas as pd;
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import psycopg2
-from datetime import date
 import time
 import math
-
+import calendar
 
 date_format = "%Y-%m-%d %H:%M:%S"
 
@@ -157,7 +156,7 @@ def mean(df):
     return df.describe()['duration']['mean']
 
 
-def study_frame( df, start, end, tab = []):
+def study_frame( df, start, end, tab = [], period="month"):
     #df         = create_dataframe(name, config2)
     periods    = []
     means      = []
@@ -167,8 +166,12 @@ def study_frame( df, start, end, tab = []):
 
     miny = int(start.split('-')[0])
     maxy = int(end.split('-')[0])
+
     minm = int(start.split('-')[1])
     maxm = int(end.split('-')[1])
+
+    mind = min(int(start.split('-')[2]), int(end.split('-')[2]));
+    maxd = max(int(start.split('-')[2]), int(end.split('-')[2]));
 
     for year in range(miny,maxy+1):
         for i in range(minm, maxm+1):
@@ -186,6 +189,7 @@ def study_frame( df, start, end, tab = []):
                 anormal.append(ano)
                 numAnormal.append(ano.index.size);
                 #num.append( nJobs(config2['spooler'], start_date, end_date, config2))
+
     frame = pd.DataFrame()
     frame['period'] = pd.Series(periods)
     frame['mean']   = pd.Series(means)
@@ -195,14 +199,13 @@ def study_frame( df, start, end, tab = []):
 
 
 
-def df2jsonLine(df):
+def df2jsonbar(df):
     n    = df.index.size
     arr1 = df.index;
     #arr2 = df.columns
     #m    = df.columns.size;
     arr2 = ['period', 'mean', 'anormal']
     m = 3
-
     json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"anormal", "type":"number"} ] ,"rows":['
     for i in range(0, n):
         json += '{"c": ['
@@ -218,28 +221,46 @@ def df2jsonLine(df):
 
 
 
+def df2jsonLine(df):
+    n    = df.index.size
+    arr1 = df.index;
+    #arr2 = df.columns
+    #m    = df.columns.size;
+    arr2 = ['period', 'mean']
+    m = 2
+    json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"prediction", "type":"number"} ] ,"rows":['
+    for i in range(0, n):
+        json += '{"c": ['
+        for j in range(0, m):
+            json += '{ "v" : "'+str(df[arr2[j]][arr1[i]])+'" }';
+            if( j < m-1):
+                json += ','
+        json += ']}'
+        if( i < n-1):
+            json += ','
+    json += ']}'
+    return json
+
+
 
 def df2jsonPie(df):
     v75  = df.duration.quantile(0.75)
     v95  = df.duration.quantile(0.95)
     vmax = v95 + (v95 - v75)
-
     mapPie = {
         'normal'    : df.query('duration <= '+str(v75)).index.size,
         'slow'      : df.query(str(v75)+'< duration <= '+str(v95)).index.size,
         'very slow' : df.query(str(v95)+'< duration <= '+str(vmax)).index.size,
         'too slow'  : df.query(str(vmax)+'< duration').index.size
     }
-
     json = '{"cols":'
     json +=  '[{"id": "type", "label": "Type", "type": "string"},'
     json +='{"id": "hours", "label": "Hours per Day", "type": "number"}],'
     json += '"rows":'
-    json += '[{"c":[{"v": "Slow"}, {"v":'+ str(mapPie['slow'])+'}]},'
-    json +='{"c":[{"v": "Too slow"},{"v":'+ str(mapPie['too slow'])+'}]},'
-    json += '{"c":[{"v": "very slow"}, {"v":'+ str(mapPie['very slow'])+'}]},'
+    json += '[{"c":[{"v": "Too Slow"}, {"v":'+ str(mapPie['too slow'])+'}]},'
+    json +='{"c":[{"v": "Very Slow"},{"v":'+ str(mapPie['very slow'])+'}]},'
+    json += '{"c":[{"v": "Slow"}, {"v":'+ str(mapPie['slow'])+'}]},'
     json += '{"c":[{"v": "Normal"}, {"v":'+ str(mapPie['normal'])+'}]}]}'
-
     return json;
 
 
@@ -256,3 +277,69 @@ def df2jsonBox(df):
             json+= ','
     json +=']'
     return json
+
+
+
+
+
+def study_frame2(df, start, end,  period="month", tab = []):
+    periods    = []
+    means      = []
+    numAnormal = []
+    #num        = tab
+    anormal    = []
+
+    if(period  == "day"):
+        d = start
+        while (d <= end):
+            delta = timedelta(days=1)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            #print "from "+str(d)+" to "+str(e)
+            #print tmp.index.size
+            if(math.isnan(mean(tmp)) == False):
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+            d = e;
+    elif(period == "week"):
+        d = start
+        while d <= end:
+            delta = timedelta(weeks=1)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            #print "from "+str(d)+" to "+str(e)
+            #print tmp.index.size
+            if(math.isnan(mean(tmp)) == False):
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+            d = e;
+    elif(period == "month"):
+        d = start
+        while d <= end:
+            year = d.year
+            month = d.month
+            maxi = calendar.monthrange(year, month)[1]
+            delta = timedelta(days=maxi)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            if(math.isnan(mean(tmp)) == False):
+                #print "from "+str(d)+" to "+str(e)
+                #print mean(tmp)
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+            d = e;
+    frame = pd.DataFrame()
+    frame['period'] = pd.Series(periods)
+    frame['mean']   = pd.Series(means)
+    #frame['num']    = pd.Series(num)
+    frame['anormal'] = pd.Series(numAnormal)
+    return frame

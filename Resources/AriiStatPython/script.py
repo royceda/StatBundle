@@ -55,14 +55,16 @@ try:
     #print xml
 
 
-    #linechart
-    start = "2015-01-01"
-    tmp = study_frame(df, start, end)
+    #barchart
+    #start = "2015-01-01"
+    start = datetime(2015,1,1)
+    tmp = end.split(" ")[0]
+    end = datetime(int(tmp.split("-")[0]), int(tmp.split("-")[1]), int(tmp.split("-")[2]))
+    tmp = study_frame2(df, start, end, "month")
     #print tmp
-    json = df2jsonLine(tmp)
-    writeXML('../views/tempChart/lineChart.json.twig', json);
+    json = df2jsonbar(tmp)
+    writeXML('../views/tempChart/barChart.json.twig', json);
     #print json
-
 
     #PieCHart
     json = df2jsonPie(df)
@@ -71,6 +73,25 @@ try:
     #boxplot
     json = df2jsonBox(df)
     writeXML('../views/tempChart/boxChart.json.twig', json);
+
+    #linechart
+    tmp = study_frame2(df, start, end, "day")
+    json = df2jsonLine(tmp);
+    #print json
+    writeXML('../views/tempChart/lineChart_day.json.twig', json);
+
+    tmp = study_frame2(df, start, end, "week")
+    json = df2jsonLine(tmp);
+    #print json
+    writeXML('../views/tempChart/lineChart_week.json.twig', json);
+
+    tmp = study_frame2(df, start, end, "month")
+    json = df2jsonLine(tmp);
+    #print json
+    writeXML('../views/tempChart/lineChart_month.json.twig', json);
+
+
+
 
 except Exception, e:
     xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows><row><cell>ERROR</cell></row></rows>";

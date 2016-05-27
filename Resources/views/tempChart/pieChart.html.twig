@@ -15,8 +15,11 @@
 
         var data = new google.visualization.DataTable(json, 0.6);
         var options = {
+          width : 550,
+          height : 550,
           title: 'Jobs states',
-          is3D: true,
+          colors: ['#FF0000', '#FF8000','#FACC2E', '#32AD17'], //
+          is3D: true
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
