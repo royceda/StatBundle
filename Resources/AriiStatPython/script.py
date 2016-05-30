@@ -86,11 +86,13 @@ try:
     writeXML('../views/tempChart/lineChart_day.json.twig', json);
 
     tmp = study_frame2(df, start, end, "week")
+    tmp1 = study_frame_pred(df, start, end, "week")
     json = df2jsonLine(tmp);
     #print json
     writeXML('../views/tempChart/lineChart_week.json.twig', json);
 
     tmp = study_frame2(df, start, end, "month")
+    tmp1 = study_frame_pred(df, start, end, "month")
     json = df2jsonLine(tmp);
     #print json
     writeXML('../views/tempChart/lineChart_month.json.twig', json);
@@ -103,3 +105,22 @@ except Exception, e:
     writeXML('../views/tempChart/anoStat.xml.twig', xml);
     writeXML('../views/tempChart/gridStat.xml.twig', xml);
     print e
+
+
+#In pred.py
+
+def toto():
+    try:
+        tmp2 = study_frame_pred(df, start, end, "month")
+        json = df2jsonLine(tmp2, True)
+        writeXML('../views/tempChart/lineChart_month_pred.json.twig', json);
+
+        tmp2 = study_frame_pred(df, start, end, "week")
+        json = df2jsonLine(tmp2, True)
+        writeXML('../views/tempChart/lineChart_week_pred.json.twig', json);
+
+        tmp2 = study_frame_pred(df, start, end, "day")
+        json = df2jsonLine(tmp2, True)
+        writeXML('../views/tempChart/lineChart_week_pred.json.twig', json);
+    except Exception, e:
+        print "crash"

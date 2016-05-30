@@ -38,7 +38,9 @@ line_chart_json:
   path: /linechart.json
   defaults: { _controller: StatBundle:Data:linechart}
 
-
+line_chart_pred_json:
+  path: /linechart_pred.json
+  defaults: { _controller: StatBundle:Data:linechartPred}
 
 
 ### data ####

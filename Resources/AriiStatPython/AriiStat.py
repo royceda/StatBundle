@@ -221,13 +221,18 @@ def df2jsonbar(df):
 
 
 
-def df2jsonLine(df):
+def df2jsonLine(df, pred=False):
     n    = df.index.size
     arr1 = df.index;
     #arr2 = df.columns
     #m    = df.columns.size;
-    arr2 = ['period', 'mean']
-    m = 2
+    if(pred):
+        arr2 = ['period', 'mean', 'pred']
+        m = 3
+    else:
+        arr2 = ['period', 'mean']
+        m = 2
+
     json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"prediction", "type":"number"} ] ,"rows":['
     for i in range(0, n):
         json += '{"c": ['
@@ -342,4 +347,84 @@ def study_frame2(df, start, end,  period="month", tab = []):
     frame['mean']   = pd.Series(means)
     #frame['num']    = pd.Series(num)
     frame['anormal'] = pd.Series(numAnormal)
+    return frame
+
+
+
+
+def study_frame_pred(df, start, end,  period="month", tab = []):
+    periods    = []
+    means      = []
+    numAnormal = []
+    #num        = tab
+    anormal    = []
+
+    lock = True #to delete the firsts nan
+
+    if(period  == "day"):
+        d = start
+        while (d <= end):
+            delta = timedelta(days=1)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            #print "from "+str(d)+" to "+str(e)
+            #print tmp.index.size
+            if(math.isnan(mean(tmp)) == True & lock == True):
+                print "nan"
+            else:
+                lock = False;
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+                d = e;
+
+    elif(period == "week"):
+        d = start
+        while d <= end:
+            delta = timedelta(weeks=1)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            #print "from "+str(d)+" to "+str(e)
+            #print tmp.index.size
+            if(math.isnan(mean(tmp)) == True & lock == True):
+                a=1;
+            else:
+                lock = False;
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+                d = e;
+
+    elif(period == "month"):
+        d = start
+        while d <= end:
+            year = d.year
+            month = d.month
+            maxi = calendar.monthrange(year, month)[1]
+            delta = timedelta(days=maxi)
+            e = d + delta
+            tmp = filter_date(df, d, e)
+            if(math.isnan(mean(tmp)) == True & lock == True):
+                #print "from "+str(d)+" to "+str(e)
+                #print mean(tmp)
+                print "nan"
+            else:
+                lock = False;
+                means.append(mean(tmp))
+                periods.append(d)
+                ano = anomalyByDate(tmp, d, e)
+                anormal.append(ano)
+                numAnormal.append(ano.index.size);
+                d = e;
+
+    frame = pd.DataFrame()
+    frame['period'] = pd.Series(periods)
+    frame['mean']   = pd.Series(means)
+    #frame['num']    = pd.Series(num)
+    frame['anormal'] = pd.Series(numAnormal)
+    frame['pred'] = pd.Series(means).interpolate(method='pchip', limit_direction='both')
     return frame

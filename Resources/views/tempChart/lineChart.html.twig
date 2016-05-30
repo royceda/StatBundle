@@ -13,21 +13,30 @@
   google.charts.load('current', {packages: ['corechart', 'line']});
   google.charts.setOnLoadCallback(drawBasic);
 
-  var param;
-
   function drawBasic() {
-    switch (param) {
-      case 1:
+
+    cb = window.document.getElementById("pred");
+
+    rbd = window.document.getElementById("day");
+    rbw = window.document.getElementById("week");
+    rbm = window.document.getElementById("month");
+
+
+
+    if(rbd.checked){
       var route = "{{ url('line_chart_json')}}?period=daily";
-      break;
-
-      case 2:
+    }else if(rbw.checked){
       var route = "{{ url('line_chart_json')}}?period=weekly";
-      break;
-
-      default:
+    }else if(rbm.checked){
       var route = "{{ url('line_chart_json')}}?period=monthly";
-      break;
+    }else if(cb.checked){
+      if(rbd.checked){
+        var route = "{{ url('line_chart_pred_json')}}?period=daily";
+      }else if(rbw.checked){
+        var route = "{{ url('line_chart_pred_json')}}?period=weekly";
+      }else if(rbm.checked){
+        var route = "{{ url('line_chart_pred_json')}}?period=monthly";
+      }
     }
 
 
@@ -76,21 +85,21 @@
           </div>
           <div id="period">
             <label class="radio-inline">
-              <input id="day" type="radio" name="inlineRadioOptions" value="Daily" onChange="daily(this)">Daily
+              <input id="day" type="radio" name="inlineRadioOptions" value="Daily" onChange="drawBasic()">Daily
             </label>
             <label class="radio-inline">
-              <input id="week" type="radio" name="inlineRadioOptions" value="Weekly" onChange="weekly(this)">Weekly
+              <input id="week" type="radio" name="inlineRadioOptions" value="Weekly" onChange="drawBasic()">Weekly
             </label>
             <label class="radio-inline" >
-              <input id="month" type="radio" name="inlineRadioOptions" value="Monthly" onChange="monthly(this)" checked>Monthly
+              <input id="month" type="radio" name="inlineRadioOptions" value="Monthly" onChange="drawBasic()" checked>Monthly
             </label>
           </div>
 
 
-          <div id="pred" class="checkbox">
+          <div id="prediction" class="checkbox">
             <label>
-              <input type="checkbox" value="" onChange="pred(this)">
-              Prediction
+              <input id="pred" type="checkbox" value="" onclick="drawBasic()">
+              Forecast
             </label>
           </div>
           <button id="refresh" type="refresh" class="btn btn-Primary">Refresh</button>
@@ -100,35 +109,3 @@
   </div>
 </body>
 </html>
-
-<script>
-function daily(cb){
-  if(cb.checked){
-    //alert(cb.checked);
-    param = 1;
-    drawBasic();
-  }
-}
-
-function weekly(cb){
-    if(cb.checked){
-      param = 2;
-      drawBasic();
-    }
-}
-
-function monthly(cb){
-  if(cb.checked){
-    param = 3;
-    drawBasic();
-  }
-}
-
-function pred(cb){
-  if(cb.checked){
-    alert("ok");
-  }else{
-    alert("non");
-  }
-}
-</script>

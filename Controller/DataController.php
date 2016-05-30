@@ -122,5 +122,29 @@ class DataController extends Controller
   }
 
 
+  public function linechartPredAction(){
+    $request = Request::createFromGlobals();
+    $period = $request->query->get('period');
+
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/json');
+
+    switch($period){
+      case "daily":
+      return $this->render('StatBundle:tempChart:lineChart_day_pred.json.twig');
+      break;
+
+      case "weekly":
+      return $this->render('StatBundle:tempChart:lineChart_week_pred.json.twig');
+      break;
+
+      case "monthly":
+      return $this->render('StatBundle:tempChart:lineChart_month_pred.json.twig');
+      break;
+
+    }
+    return $this->render('StatBundle:tempChart:lineChart_month_pred.json.twig');
+  }
+
 
 }
