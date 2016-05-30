@@ -98,15 +98,29 @@ class DataController extends Controller
 
 
   public function linechartAction(){
-
     $request = Request::createFromGlobals();
     $period = $request->query->get('period');
 
-    
-
     $response = new Response();
     $response->headers->set('Content-Type', 'application/json');
-    return $this->render('StatBundle:tempChart:lineChart.json.twig');
+
+    switch($period){
+      case "daily":
+      return $this->render('StatBundle:tempChart:lineChart_day.json.twig');
+      break;
+
+      case "weekly":
+      return $this->render('StatBundle:tempChart:lineChart_week.json.twig');
+      break;
+
+      case "monthly":
+      return $this->render('StatBundle:tempChart:lineChart_month.json.twig');
+      break;
+
+    }
+    return $this->render('StatBundle:tempChart:lineChart_month.json.twig');
   }
+
+
 
 }

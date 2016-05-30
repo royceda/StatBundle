@@ -57,7 +57,9 @@ try:
 
     #barchart
     #start = "2015-01-01"
-    start = datetime(2015,1,1)
+    #start = datetime(2015,1,1)
+    tmp = start.split(" ")[0]
+    start = datetime(int(tmp.split("-")[0]), int(tmp.split("-")[1]), int(tmp.split("-")[2]))
     tmp = end.split(" ")[0]
     end = datetime(int(tmp.split("-")[0]), int(tmp.split("-")[1]), int(tmp.split("-")[2]))
     tmp = study_frame2(df, start, end, "month")
@@ -74,7 +76,10 @@ try:
     json = df2jsonBox(df)
     writeXML('../views/tempChart/boxChart.json.twig', json);
 
-    #linechart
+
+
+
+    ######  Linechart
     tmp = study_frame2(df, start, end, "day")
     json = df2jsonLine(tmp);
     #print json
