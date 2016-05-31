@@ -129,6 +129,37 @@ class DataController extends Controller
     $response = new Response();
     $response->headers->set('Content-Type', 'application/json');
 
+
+    //appel systeme
+  /*  $request = Request::createFromGlobals();
+    $id = $request->query->get('id');
+    $from = $request->query->get('from');
+    $to = $request->query->get('to');
+
+    $dhtmlx = $this->container->get('arii_core.dhtmlx');
+    $sql = $this->container->get('arii_core.sql');
+    $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
+          .$sql->From(array('SCHEDULER_HISTORY h'));
+    $qry .= $sql->Where(array('h.ID'=>$id));
+
+    $data = $dhtmlx->Connector('data');
+    $res = $data->sql->query( $qry );
+    $Infos = $data->sql->get_next($res);
+
+    $spooler =  $Infos['SPOOLER_ID'];
+    $name    =  $Infos['JOB_NAME'];
+
+
+    $query = 'cd /home/arii/Symfony/src/Arii/StatBundle/Resources/AriiStatPython/; ';
+    $query .= "python script.py ".$name." ".$spooler." ".$from." ".$to;
+
+    //echo $query;
+
+    $output = system($query); */
+
+
+
+
     switch($period){
       case "daily":
       return $this->render('StatBundle:tempChart:lineChart_day_pred.json.twig');

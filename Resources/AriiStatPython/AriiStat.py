@@ -221,6 +221,7 @@ def df2jsonbar(df):
 
 
 
+
 def df2jsonLine(df, pred=False):
     n    = df.index.size
     arr1 = df.index;
@@ -232,11 +233,13 @@ def df2jsonLine(df, pred=False):
     else:
         arr2 = ['period', 'mean']
         m = 2
-
     json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"prediction", "type":"number"} ] ,"rows":['
     for i in range(0, n):
         json += '{"c": ['
-        for j in range(0, m):
+        #{v: 'Date(2000, 8, 5)'}
+        tmp_time = df[arr2[0]][arr1[i]]
+        json += '{ "v" : "Date('+str(tmp_time.year)+','+str(tmp_time.month)+','+str(tmp_time.day)+')" },';
+        for j in range(1, m):
             json += '{ "v" : "'+str(df[arr2[j]][arr1[i]])+'" }';
             if( j < m-1):
                 json += ','
@@ -334,8 +337,6 @@ def study_frame2(df, start, end,  period="month", tab = []):
             e = d + delta
             tmp = filter_date(df, d, e)
             if(math.isnan(mean(tmp)) == False):
-                #print "from "+str(d)+" to "+str(e)
-                #print mean(tmp)
                 means.append(mean(tmp))
                 periods.append(d)
                 ano = anomalyByDate(tmp, d, e)
@@ -348,7 +349,6 @@ def study_frame2(df, start, end,  period="month", tab = []):
     #frame['num']    = pd.Series(num)
     frame['anormal'] = pd.Series(numAnormal)
     return frame
-
 
 
 
@@ -369,16 +369,13 @@ def study_frame_pred(df, start, end,  period="month", tab = []):
             tmp = filter_date(df, d, e)
             #print "from "+str(d)+" to "+str(e)
             #print tmp.index.size
-            if(math.isnan(mean(tmp)) == True & lock == True):
-                print "nan"
-            else:
-                lock = False;
-                means.append(mean(tmp))
-                periods.append(d)
-                ano = anomalyByDate(tmp, d, e)
-                anormal.append(ano)
-                numAnormal.append(ano.index.size);
-                d = e;
+
+            means.append(mean(tmp))
+            periods.append(d)
+            ano = anomalyByDate(tmp, d, e)
+            anormal.append(ano)
+            numAnormal.append(ano.index.size);
+            d = e;
 
     elif(period == "week"):
         d = start
@@ -388,16 +385,13 @@ def study_frame_pred(df, start, end,  period="month", tab = []):
             tmp = filter_date(df, d, e)
             #print "from "+str(d)+" to "+str(e)
             #print tmp.index.size
-            if(math.isnan(mean(tmp)) == True & lock == True):
-                a=1;
-            else:
-                lock = False;
-                means.append(mean(tmp))
-                periods.append(d)
-                ano = anomalyByDate(tmp, d, e)
-                anormal.append(ano)
-                numAnormal.append(ano.index.size);
-                d = e;
+
+            means.append(mean(tmp))
+            periods.append(d)
+            ano = anomalyByDate(tmp, d, e)
+            anormal.append(ano)
+            numAnormal.append(ano.index.size);
+            d = e;
 
     elif(period == "month"):
         d = start
@@ -408,18 +402,13 @@ def study_frame_pred(df, start, end,  period="month", tab = []):
             delta = timedelta(days=maxi)
             e = d + delta
             tmp = filter_date(df, d, e)
-            if(math.isnan(mean(tmp)) == True & lock == True):
-                #print "from "+str(d)+" to "+str(e)
-                #print mean(tmp)
-                print "nan"
-            else:
-                lock = False;
-                means.append(mean(tmp))
-                periods.append(d)
-                ano = anomalyByDate(tmp, d, e)
-                anormal.append(ano)
-                numAnormal.append(ano.index.size);
-                d = e;
+
+            means.append(mean(tmp))
+            periods.append(d)
+            ano = anomalyByDate(tmp, d, e)
+            anormal.append(ano)
+            numAnormal.append(ano.index.size);
+            d = e;
 
     frame = pd.DataFrame()
     frame['period'] = pd.Series(periods)
@@ -427,4 +416,6 @@ def study_frame_pred(df, start, end,  period="month", tab = []):
     #frame['num']    = pd.Series(num)
     frame['anormal'] = pd.Series(numAnormal)
     frame['pred'] = pd.Series(means).interpolate(method='pchip', limit_direction='both')
+    #frame['pred'] = pd.Series(means).interpolate(method='spline', order=3, limit_direction='both')
+
     return frame
