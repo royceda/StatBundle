@@ -85,7 +85,6 @@ def toto(df, start, end):
 try:
     clearFiles()
     #print1();
-
     pd.DataFrame();
     name = str(sys.argv[1]);
     spooler = str(sys.argv[2]);

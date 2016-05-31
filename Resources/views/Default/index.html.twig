@@ -60,10 +60,10 @@ dhtmlxEvent(window, "load", function(){
 
   aGrid.setImagePath("codebase/imgs/");
   aGrid.setIconsPath("icons/");
-  aGrid.setHeader("ID,START_TIME,CAUSE,duration");
+  aGrid.setHeader("ID,START_TIME,CAUSE, {{ "Duration" | trans }}");
   aGrid.attachHeader("#text_filter,#text_filter,#select_filter,#text_filter");
   aGrid.setColTypes("ro,ro,ro,ro");
-  aGrid.setInitWidths("200,200,200,*");
+  aGrid.setInitWidths("200,200,200,100");
   aGrid.setColAlign("left,left,left,left");
   aGrid.enableSmartRendering(true, 15);
   aGrid.init();
@@ -106,7 +106,7 @@ dhtmlxEvent(window, "load", function(){
   //grid dataframe
   dataFrameGrid.setImagePath("codebase/imgs/");
   dataFrameGrid.setIconsPath("icons/");
-  dataFrameGrid.setHeader("ID, Spooler, Job_Name, Start_date, Duration, STEPS, PARAMETERS");
+  dataFrameGrid.setHeader("ID, Spooler, Job_Name, Start_date, {{ "Duration" | trans }}, STEPS, PARAMETERS");
   dataFrameGrid.setColSorting("str,str,str,str,int,str,str");
   //dataFrameGrid.setColTypes("ro, ro, ro, ro, ro, ro, ro");
   dataFrameGrid.setInitWidths("100,150,250,250,250,250,250");
@@ -144,7 +144,7 @@ dhtmlxEvent(window, "load", function(){
   statGrid = tabbar.cells("a1").attachGrid();
   statGrid.setImagePath("codebase/imgs/");
   statGrid.setIconsPath("icons/");
-  statGrid.setHeader("variable, count, mean, std, min, 25%, 50%,75%,max");
+  statGrid.setHeader("variable, {{ "Count" | trans }}, {{ "Mean" | trans }}, {{ "std" | trans }}, min, 25%, 50%,75%,max");
   statGrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro");
   statGrid.setInitWidths("200,100,100,100,100,100,100,100,100");
   statGrid.setColAlign("left,center,left,center,center,center,center,center,center");

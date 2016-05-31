@@ -51,7 +51,7 @@
 
 
     var options = {
-      title: 'Suivi des temps moyens Du Job',
+      title: '{{ "History in time" | trans }}',
       width: 800,
       height: 600,
       pointSize : 10,
@@ -62,8 +62,8 @@
         maxZoomIn : 4
       },
       vAxes: {
-        0: {title: "mean", format: "#.###"},
-        1: {title:"prediction", format: "#.###"}
+        0: {title: "{{ "Mean" | trans }}", format: "#.###"},
+        1: {title:"{{ "Forecast" | trans }}", format: "#.###"}
       },
       hAxis: {
         title: "Date",
@@ -96,13 +96,13 @@
           </div>
           <div id="period">
             <label class="radio-inline">
-              <input id="day" type="radio" name="inlineRadioOptions" value="Daily" onChange="drawBasic()">Daily
+              <input id="day" type="radio" name="inlineRadioOptions" value="Daily" onChange="drawBasic()">{{ "Daily" | trans }}
             </label>
             <label class="radio-inline">
-              <input id="week" type="radio" name="inlineRadioOptions" value="Weekly" onChange="drawBasic()">Weekly
+              <input id="week" type="radio" name="inlineRadioOptions" value="Weekly" onChange="drawBasic()">{{ "Weekly" | trans }}
             </label>
             <label class="radio-inline" >
-              <input id="month" type="radio" name="inlineRadioOptions" value="Monthly" onChange="drawBasic()" checked>Monthly
+              <input id="month" type="radio" name="inlineRadioOptions" value="Monthly" onChange="drawBasic()" checked>{{ "Monthly" | trans }}
             </label>
           </div>
 
@@ -110,10 +110,10 @@
           <div id="prediction" class="checkbox">
             <label>
               <input id="pred" type="checkbox" value="" onchange="drawBasic()">
-              Forecast
+              {{ "Forecast" | trans }}
             </label>
           </div>
-          <button id="refresh" type="refresh" class="btn btn-Primary">Refresh</button>
+
         </div>
       </form>
     </div>
