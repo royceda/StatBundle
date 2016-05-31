@@ -97,7 +97,7 @@ try:
     #end = "2016-05-10"
 
     #Description
-    df = create_dataframe(name, spooler, config1);
+    df = create_dataframe(name, spooler, config);
     #print df;
     df = filter_date(df, start, end);
     xml = dfDescribe2xml(df.describe());
