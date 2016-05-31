@@ -69,6 +69,33 @@ config = { 'dbname'   : '****',
 
 NB: this manipulation is valid only for the first version. Afterward the python module will sync with JIDBundle DB configurations
 
+### translation file in french
+
+In **CoreBundle/Resources/translations/messages.fr.yml** add the following code
+
+```yml
+History : Historique
+History in time : Historique dans le temps
+Advanced : avancé
+Histogram : Histogramme
+Start date : Date de début
+Duration : durée
+count : compte
+std : écart type
+mean : moyenne
+mean time : temps moyen
+average : moyenne 
+Value : Valeur
+Scatter : Point
+Box : Boîte
+freaks : anomalies
+Job states : états du job
+Daily : Quotidien
+Weekly : Hebdomadaire
+Monthly : Mensuel
+Visualization Type : Type de visualisation
+```
+
 
 # Using
 ---
