@@ -14,6 +14,7 @@ class DataController extends Controller
 {
   /* DATA */
 
+
   public function dataframeAction(){
     $response = new Response();
     $response->headers->set('Content-Type', 'text/xml');
@@ -40,6 +41,10 @@ class DataController extends Controller
 
     $spooler =  $Infos['SPOOLER_ID'];
     $name    =  $Infos['JOB_NAME'];
+
+    if($name == null){
+      echo " probleme de db ";
+    }
 
     //echo $spooler;
     //echo $name;

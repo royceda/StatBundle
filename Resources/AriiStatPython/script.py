@@ -106,7 +106,7 @@ try:
 
     #Anomalies potentielles
     tmp = anomalyByDate(df, start, end)
-    xml = df2xml(tmp)
+    xml = df2xml(tmp, True, df)
     writeXML('../views/tempChart/anoStat.xml.twig', xml);
     #print xml
 

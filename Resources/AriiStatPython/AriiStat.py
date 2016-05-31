@@ -10,6 +10,7 @@ from config import *
 
 date_format = "%Y-%m-%d %H:%M:%S"
 
+
 def create_dataframe(name, spooler, conf, lim=100000):
     #spooler = conf['spooler'];
     try:
@@ -64,15 +65,28 @@ def dfDescribe2xml(df):
     return str1;
 
 
-def df2xml(df):
+def df2xml(df, ano=False, df2=pd.DataFrame()):
     ''
+
+    if(df2.empty == False):
+        v75  = df2.duration.quantile(0.75)
+        v95  = df2.duration.quantile(0.95)
+        vmax = v95 + (v95 - v75)
+
     n    = df.index.size;
     m    = df.columns.size;
     arr1 = df.index;
     arr2 = df.columns;
     str1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows>";
     for i in range(0, n):
-        str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'">';
+        if(ano):
+            if(df['duration'][arr1[i]] > vmax):
+                str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'" style="background-color: #fbb4ae">';
+            else:
+                str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'" style="background-color: #ffffcc">';
+        else:
+            str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'">';
+
         for j in range(0, m):
             #str1 += '<cell>'+arr2[j]+'</cell>';
             str1 += '<cell>'+str(df[arr2[j]][arr1[i]])+'</cell>';
