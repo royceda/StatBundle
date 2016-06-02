@@ -19,10 +19,10 @@
       var data = new google.visualization.DataTable(json, 0.6);
 
       var options = {
-              title: '{{ "History in time"| trans }}',
+              title: '{{ "Monthly History"| trans }}',
               width: 750,
               height: 400,
-              vAxes: { 0: {title: "mean", format: "#.###"}, 1: {title:"nb anormal", format: "#.###"}},
+              vAxes: { 0: {title: "{{"Mean"| trans}}", format: "#.###"}, 1: {title: "{{"number of freak" | trans}}", format: "#.###"}},
               hAxis: {
                   title: "Date"
               },

@@ -16,8 +16,11 @@ def create_dataframe(name, spooler, conf, lim=100000):
     try:
         conn = psycopg2.connect("dbname='"+conf['dbname']+"' user='"+conf['user']+"' host='"+conf['host']+"' password='"+conf['password']+"'");
         if(name != None):
-            df = pd.read_sql_query('select * from scheduler_history as sh where sh."JOB_NAME" = \''+name+'\' and sh."SPOOLER_ID" =\''+spooler+'\' limit '+str(lim)+';',con=conn)
+            df = pd.read_sql_query('select * from scheduler_history as sh where sh."JOB_NAME" = \''+name+'\' and sh."SPOOLER_ID" =\''+spooler+'\'  limit '+str(lim)+';',con=conn)
+            #print df
             tab = []
+            df = df.query("END_TIME != 'NaT'")
+            #print df.index.size
             for i in range(0, len(df)):
                 epoch1 = int(time.mktime(time.strptime(str(df['START_TIME'][i]), date_format)));
                 epoch2 = int(time.mktime(time.strptime(str(df['END_TIME'][i]), date_format)));
@@ -26,11 +29,11 @@ def create_dataframe(name, spooler, conf, lim=100000):
             df['duration'] = serie;
         else:
             df = pd.read_sql_query('select * from scheduler_history as sh limit '+str(lim)+';',con=conn)
-
         #print("connection: ok")
         return df;
-    except:
-        print("I am unable to connect to the database");
+    except Exception, e:
+        print e
+        print("I am unable to connect to the database: ");
 
 
 def produce_box(df):

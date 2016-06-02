@@ -155,7 +155,7 @@ try:
 
     toto(df, start, end)
 except Exception, e:
-    xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows><row><cell>ERROR</cell></row></rows>";
+    xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows><row><cell>ERROR"+str(e)+"</cell></row></rows>";
     writeXML('../views/tempChart/anoStat.xml.twig', xml);
     writeXML('../views/tempChart/gridStat.xml.twig', xml);
     print e

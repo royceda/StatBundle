@@ -39,7 +39,6 @@
     }
 
 
-
     var json = $.ajax({
       url: route,
       dataType : "json",
@@ -48,12 +47,11 @@
 
 
     var data = new google.visualization.DataTable(json, 0.6);
-
-
+    
     var options = {
       title: '{{ "History in time" | trans }}',
       width: 800,
-      height: 600,
+      height: 500,
       pointSize : 10,
       explorer: {
         actions: ['dragToZoom', 'rightClickToReset'],
