@@ -26,22 +26,31 @@ class DataController extends Controller
   public function describeAction(){
 
     $request = Request::createFromGlobals();
-    $id = $request->query->get('id');
-    $from = $request->query->get('from');
-    $to = $request->query->get('to');
+    $session = $this->container->get('arii_core.session');
+
+    $id       = $request->query->get('id');
+    $from     = $request->query->get('from');
+    $to       = $request->query->get('to');
+    $database = $session->get('database');
 
     $dhtmlx = $this->container->get('arii_core.dhtmlx');
-    $sql = $this->container->get('arii_core.sql');
-    $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
-          .$sql->From(array('SCHEDULER_HISTORY h'));
-    $qry .= $sql->Where(array('h.ID'=>$id));
+    $sql    = $this->container->get('arii_core.sql');
+    $qry    = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
+             .$sql->From(array('SCHEDULER_HISTORY h'));
+    $qry   .= $sql->Where(array('h.ID'=>$id));
 
-    $data = $dhtmlx->Connector('data');
-    $res = $data->sql->query( $qry );
+    $data  = $dhtmlx->Connector('data');
+    $res   = $data->sql->query( $qry );
     $Infos = $data->sql->get_next($res);
 
     $spooler =  $Infos['SPOOLER_ID'];
     $name    =  $Infos['JOB_NAME'];
+
+    $dbname   = $database['dbname'];
+    $user     = $database['user'];
+    $host     = $database['host'];
+    $password = $database['password'];
+
 
     if($name == null){
       echo " probleme de db ";
@@ -54,7 +63,7 @@ class DataController extends Controller
     //$query1 = "ls /usr/local/lib/python2.7/dist-packages";
     //echo exec($query1, $output, $status);
     $query = 'cd /home/arii/Symfony/src/Arii/StatBundle/Resources/AriiStatPython/; ';
-    $query .= "python script.py ".$name." ".$spooler." ".$from." ".$to;
+    $query .= "python script.py ".$name." ".$spooler." ".$from." ".$to." ".$dbname." ".$user." ".$host." ".$password;
 
     //echo $query;
 

@@ -54,13 +54,13 @@ def filter_date(df, start_date, end_date):
 def dfDescribe2xml(df):
     'Pour le tableau de stat'
     n = df['ID'].size;
-    arr1 = ['STEPS', 'duration'];
+    arr1 = ['duration'];
     arr = ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
     str1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows>";
-    for i in range(0, 2):
-        str1 += '<row id="'+arr1[i]+'">';
+    for i in range(0, len(arr1)):
+        str1 += '<row id="'+str(arr1[i])+'">';
         str1 += '<cell>'+arr1[i]+'</cell>';
-        for j in range(0, 8):
+        for j in range(0, len(arr)):
             #str1 += '<cell>'+arr[j]+'</cell>';
             str1 += '<cell>'+str(df[arr1[i]][arr[j]])+'</cell>';
         str1 += '</row>'
@@ -70,7 +70,6 @@ def dfDescribe2xml(df):
 
 def df2xml(df, ano=False, df2=pd.DataFrame()):
     ''
-
     if(df2.empty == False):
         v75  = df2.duration.quantile(0.75)
         v95  = df2.duration.quantile(0.95)
@@ -84,13 +83,17 @@ def df2xml(df, ano=False, df2=pd.DataFrame()):
     for i in range(0, n):
         if(ano):
             if(df['duration'][arr1[i]] > vmax):
-                str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'" style="background-color: #fbb4ae">';
+                str1 += '<row id="'+str(int(df[arr2[0]][arr1[i]]))+'" style="background-color: #fbb4ae">';
             else:
-                str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'" style="background-color: #ffffcc">';
+                str1 += '<row id="'+str(int(df[arr2[0]][arr1[i]]))+'" style="background-color: #ffffcc">';
         else:
-            str1 += '<row id="'+str(df[arr2[0]][arr1[i]])+'">';
+            str1 += '<row id="'+str(int(df[arr2[0]][arr1[i]]))+'">';
 
-        for j in range(0, m):
+        if(ano == True):
+            str1 += '<cell>'+str(int(df[arr2[0]][arr1[i]]))+'</cell>';
+        else:
+            str1 += '<cell>'+str(df[arr2[0]][arr1[i]])+'</cell>';
+        for j in range(1, m):
             #str1 += '<cell>'+arr2[j]+'</cell>';
             str1 += '<cell>'+str(df[arr2[j]][arr1[i]])+'</cell>';
         str1 += '</row>'
@@ -108,7 +111,7 @@ def df2xml1(df):
     arr2 = ['ID', 'JOB_NAME']
     str1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rows>";
     for i in range(0, n):
-        str1 += '<row id="'+str(arr1[i])+'">';
+        str1 += '<row id="'+str(int(arr1[i]))+'">';
         for j in range(0, 2):
             #str1 += '<cell>'+arr2[j]+'</cell>';
             str1 += '<cell>'+str(df[arr2[j]][arr1[i]])+'</cell>';
@@ -221,9 +224,9 @@ def df2jsonLine(df, pred=False):
     json = '{"cols":[ {"id":"1", "label":"period", "type":"string"},{"id":"2", "label":"mean", "type":"number"},{"id":"3", "label":"prediction", "type":"number"} ] ,"rows":['
     for i in range(0, n):
         json += '{"c": ['
-        #{v: 'Date(2000, 8, 5)'}
+        #{v: 'Date(2000, 8, 5)'} for 5/07/2000
         tmp_time = df[arr2[0]][arr1[i]]
-        json += '{ "v" : "Date('+str(tmp_time.year)+','+str(tmp_time.month)+','+str(tmp_time.day)+')" },';
+        json += '{ "v" : "Date('+str(tmp_time.year)+','+str(tmp_time.month-1)+','+str(tmp_time.day)+')" },';
         for j in range(1, m):
             json += '{ "v" : "'+str(df[arr2[j]][arr1[i]])+'" }';
             if( j < m-1):
@@ -265,7 +268,7 @@ def df2jsonBox(df):
     m    = 3;
     json = "["
     for i in range(0, n):
-        json += '{ "year"  : "'+str("2016")+'", "name" : "'+str(df[arr2[1]][arr1[i]])+'", "value" :'+str(df[arr2[2]][arr1[i]])+'}'
+        json += '{ "year"  : "'+str("0000")+'", "name" : "'+str(int(df[arr2[1]][arr1[i]]))+'", "value" :'+str(df[arr2[2]][arr1[i]])+'}'
         if( i != n-1):
             json+= ','
     json +=']'

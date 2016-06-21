@@ -63,10 +63,10 @@ public function jobsAction(){
           $list .='<row id="'.$job['runs'][0]['dbid'].'" style="background-color: '.$this->ColorStatus[$status].'">';
           $list .='<cell>'.$job['spooler'].'</cell>';
 
-          $list .='<cell>'.$job['name'].'</cell>';
-          if (isset($job['runs'])) {
+          $list .='<cell>'.$job['folder'].'/'.$job['name'].'</cell>';
+          /*if (isset($job['runs'])) {
             $list .='<cell>'.$job['runs'][0]['start'].'</cell>';
-          }
+          }*/
           $list .='</row>';
       }
 
@@ -79,9 +79,15 @@ public function jobsAction(){
       $request->getSession()->set('past', $date1 );
       $request->getSession()->set('future', $date2 );
 
-
       return  $this->redirectToRoute('Stat_jobs_xml');
     }
+
+    public function form_dateAction(){
+      $response = new Response();
+      $response->headers->set('Content-Type', 'text/xml');
+      return $this->render('StatBundle:Default:form_date.xml.twig',array(), $response );
+    }
+
 
     public function historyJobAction(){
       //job name

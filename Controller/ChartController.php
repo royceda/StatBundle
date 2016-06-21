@@ -11,21 +11,21 @@ class ChartController extends Controller
 {
   public function boxplotAction()
   {
-    return $this->render('StatBundle:tempChart:boxChart.html.twig');
+    return $this->render('StatBundle:Chart:boxChart.html.twig');
   }
 
   public function piechartAction()
   {
-    return $this->render('StatBundle:tempChart:pieChart.html.twig');
+    return $this->render('StatBundle:Chart:pieChart.html.twig');
   }
 
   public function barchartAction()
   {
-    return $this->render('StatBundle:tempChart:barChart.html.twig');
+    return $this->render('StatBundle:Chart:barChart.html.twig');
   }
 
   public function linechartAction()
   {
-    return $this->render('StatBundle:tempChart:lineChart.html.twig');
+    return $this->render('StatBundle:Chart:lineChart.html.twig');
   }
 }

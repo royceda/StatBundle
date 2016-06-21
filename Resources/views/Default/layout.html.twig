@@ -93,6 +93,9 @@ function ClickRibbon (itemid,state) {
    case 'filter_edit':
         window.location = "{{ url('arii_filters') }}";
         break;
+  case 'menu_stat':
+        window.location = "{{ url('arii_stat') }}";
+        break;
     case 'filter_all':
             globalLayout.cells("a").progressOn();
             globalLayout.cells("b").progressOn();
@@ -195,7 +198,7 @@ function PurgeJob( id ) {
     winLayout.cells("a").attachURL("{{ url('arii_JID_detail_job') }}?id="+id,true);
 
     var toolbar;
-    //toolbar = winLayout.cells("a").attachToolbar();
+    toolbar = winLayout.cells("a").attachToolbar();
     toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
     toolbar.loadStruct("{{ url('arii_JID_toolbar_purge_job') }}");
 
@@ -245,7 +248,7 @@ function Order( Command, id, Text, Toolbar, Time, chain )
     winbar.addTab("b2","{{ "Parameters" | trans }}","100px");
 
     var toolbar;
-    //toolbar = winLayout.cells('a').attachToolbar();
+    toolbar = winLayout.cells('a').attachToolbar();
     toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
 
     toolbar.loadStruct(Toolbar,function(){
@@ -257,7 +260,7 @@ function Order( Command, id, Text, Toolbar, Time, chain )
     });
 
     var toolbar2;
-    //toolbar2 = winbar.cells("b2").attachToolbar();
+    toolbar2 = winbar.cells("b2").attachToolbar();
     toolbar2.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
     toolbar2.loadStruct("{{ url('xml_JID_order_toolbar_params') }}");
 
@@ -362,7 +365,7 @@ var largeur = 600;
     winbar.addTab("b2","{{ "Parameters" | trans }}","100px");
     winbar.cells("b1").attachURL("{{ url('arii_JID_detail_order') }}?id="+encodeURIComponent(id),true);
 
-    //var toolbar = winLayout.cells("a").attachToolbar();
+    var toolbar = winLayout.cells("a").attachToolbar();
     toolbar.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
     toolbar.loadStruct(Toolbar ,function(){
         GBCalendar = new dhtmlXCalendarObject(toolbar.getInput('ref_date'));
@@ -371,7 +374,7 @@ var largeur = 600;
     });
 
     var toolbar2;
-    //toolbar2 = winbar.cells("b2").attachToolbar();
+    toolbar2 = winbar.cells("b2").attachToolbar();
     toolbar2.setIconsPath("{{ asset('bundles/ariicore/images/toolbar/') }}");
     toolbar2.load("{{ url('xml_JID_toolbar_order_param') }}");
 

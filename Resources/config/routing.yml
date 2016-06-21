@@ -4,6 +4,10 @@ arii_stat:
 
 
 
+xml_Stat_date_form:
+  pattern: /jobs/form_date.xml
+  defaults: {_controller: StatBundle:Default:form_date}
+
 ########## Charts ##################################
 box_chart:
   path: /boxplot

@@ -1,5 +1,4 @@
-{# src/Arii/StatBundle/Resources/views/Default/index.html.twig #}
-{% extends "AriiJIDBundle::layout.html.twig" %}
+{% extends "StatBundle::layout.html.twig" %}
 {% block body %}
 <script type="text/javascript">
 dhtmlxEvent(window, "load", function(){
@@ -32,7 +31,7 @@ dhtmlxEvent(window, "load", function(){
   //il y a un petit bug quand on change de db
   myTabs.cells("a1").setActive();
   myFormDate = myTabs.cells("a2").attachForm();
-  myFormDate.loadStruct("{{url('xml_JID_job_date_form')}}");
+  myFormDate.loadStruct("{{url('xml_Stat_date_form')}}");
 
 
 
@@ -85,21 +84,24 @@ dhtmlxEvent(window, "load", function(){
   //grid jobs
   jobGrid.setImagePath("codebase/imgs/");
   jobGrid.setIconsPath("icons/");
-  jobGrid.setHeader("Spooler,Job_Name,Start_Time");
-  jobGrid.attachHeader("#select_filter,#text_filter,#text_filter");
-  jobGrid.setColTypes("ro,ro,ro");
-  jobGrid.setInitWidths("100,*,165");
-  jobGrid.setColAlign("left,left,left");
+  jobGrid.setHeader("Spooler,Job_Name");
+  jobGrid.attachHeader("#select_filter,#text_filter");
+  jobGrid.setColTypes("ro,ro");
+  jobGrid.setInitWidths("100,*");
+  jobGrid.setColAlign("left,left");
   jobGrid.init();
   jobGrid.enableSmartRendering(true, 10);
   jobGrid.load("{{ url('Stat_jobs_xml')}}");
-  jobGrid.attachEvent("onRowDblClicked", function JobDetail(rId, cInd){
-    layout.cells("c").progressOn();
+  /*jobGrid.attachEvent("onRowDblClicked", function JobDetail(rId, cInd){
+
     dataFrameGrid.clearAll();
     dataFrameGrid.load("{{ url('Stat_job_history_xml') }}?id="+rId, function (rId) {
+      //les autres
+
+
       layout.cells("c").progressOff();
   });
-});
+});*/
 
 
 
@@ -115,6 +117,7 @@ dhtmlxEvent(window, "load", function(){
   dataFrameGrid.enableSmartRendering(true, 5);
   jobGrid.attachEvent("onRowDblClicked", function Analyze(rId, cInd){
     layout.cells("b").progressOn();
+    layout.cells("c").progressOn();statGrid.clearAll();
     statGrid.clearAll();
     aGrid.clearAll();
     /*var date1 = "{{app.session.get('past')}}";
@@ -125,10 +128,17 @@ dhtmlxEvent(window, "load", function(){
     var date1 = calFrom.getFormatedDate();
     //alert(date1);
 
+    dataFrameGrid.load("{{ url('Stat_job_history_xml') }}?id="+rId, function (rId) {
+      //les autres
+      layout.cells("c").progressOff();
+    });
+
+
     statGrid.load("{{ url('describe_xml') }}?id="+rId+"&from="+date1+"&to="+date2, function (rId) {
       aGrid.load("{{ url('anomaly_xml')}}");
       aLayout.cells("a").attachURL("{{url('pie_chart')}}");
-      //tabbar.cells('a4').attachURL("{{url('pie_chart')}}",null, true);
+      tabbar.cells('a5').attachURL("{{url('line_chart')}}");
+        //tabbar.cells('a4').attachURL("{{url('pie_chart')}}",null, true);
       tabbar.cells('a3').attachURL("{{url('bar_chart')}}",null, true);
       tabbar.cells('a2').attachURL("{{url('box_chart')}}",null, true);
       layout.cells("b").progressOff();
@@ -182,6 +192,9 @@ dhtmlxEvent(window, "load", function(){
 
 
     myFormDate.attachEvent("onButtonClick",function(id){
+
+      jobname = myFormDate.getInput("jobname").value;
+
       switch (id) {
         case 'proceed':
            //layout1.cells("b").progressOn();
@@ -189,7 +202,12 @@ dhtmlxEvent(window, "load", function(){
            calTo = myFormDate.getCalendar("end_date");
            var date2 = calTo.getFormatedDate();
            var date1 = calFrom.getFormatedDate();
-           DateRefresh(date1, date2);
+           if (jobname != ""){
+             alert(jobname);
+             DateRefresh(date1, date2, jobname);
+           }else{
+             DateRefresh(date1, date2);
+           }
            break;
         default:
            alert(id);
@@ -198,18 +216,23 @@ dhtmlxEvent(window, "load", function(){
     });
 
 
-    function DateRefresh(date1, date2){
-      //alert("from "+date1+" to "+date2);
-      var tmp = "true"
-      var route = "{{ url('Stat_jobs_date_xml', {'date1' : 'date1', 'date2':'date2'}) }}";
-      route = route.replace("date1", date1);
-      route = route.replace("date2", date2);
-
-      //a changer car duplication de code de refresh
-      var route2 = "{{ url('Stat_jobs_xml') }}";
-      //route2 = route.replace("var", false);
-
+    function DateRefresh(date1, date2, name = ""){
       layout1.cells("b").progressOn();
+
+      if(name == ""){
+        //alert("from "+date1+" to "+date2);
+        var tmp = "true"
+        var route = "{{ url('Stat_jobs_date_xml', {'date1' : 'date1', 'date2':'date2'}) }}";
+        route = route.replace("date1", date1);
+        route = route.replace("date2", date2);
+
+        //a changer car duplication de code de refresh
+        var route2 = "{{ url('Stat_jobs_xml') }}";
+        //route2 = route.replace("var", false);
+      }else{
+        //requete avec le where job
+      }
+
       jobGrid.load(route);
 
       route2 = "{{ url('Stat_jobs_xml')}}";

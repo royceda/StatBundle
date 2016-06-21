@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+  <item type="settings" position="label-left" inputWidth="auto" labelAlign="left" labelWidth="120" />
+   <item type="fieldset" name="data" label="Request">
+     <item type="calendar" id="start_date"  dateFormat="%Y-%m-%d %H:%i" name="start_date" label="Start Date" value="{{app.session.get('past')}}"
+       enableTime="true" calendarPosition="right"/>
+     <item type="calendar" id="end_date"  dateFormat="%Y-%m-%d %H:%i" name="end_date" label="End Date"     value="{{app.session.get('future')}}"
+        enableTime="true" calendarPosition="right"/>
+     <item type="input"    id="jobname" name="jobname" label="Job Name" />
+     <item type="input"    id="spooler" name="spooler" label="Spooler"  />
+     <item type="button"   id="proceed" name="proceed" isbig="true" value="Refresh"/>
+   </item>
+</items>
