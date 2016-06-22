@@ -79,3 +79,13 @@ Stat_jobs_date_xml:
 Stat_job_history_xml:
   path: /job_xml_history/
   defaults: { _controller: StatBundle:Default:historyJob}
+
+#Special
+
+get_job_name_by_id:
+  path: /job_name/
+  defaults: {_controller: StatBundle:Default:getName}
+
+get_spooler_by_job_id:
+  path: /job_name/
+  defaults: {_controller: StatBundle:Default: getSpooler}

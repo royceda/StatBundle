@@ -31,9 +31,7 @@ dhtmlxEvent(window, "load", function(){
   //il y a un petit bug quand on change de db
   myTabs.cells("a1").setActive();
   myFormDate = myTabs.cells("a2").attachForm();
-  myFormDate.loadStruct("{{url('xml_Stat_date_form')}}");
-
-
+  myFormDate.loadStruct("{{url('xml_Stat_date_form')}}?first=true");
 
 
 
@@ -120,6 +118,7 @@ dhtmlxEvent(window, "load", function(){
     layout.cells("c").progressOn();statGrid.clearAll();
     statGrid.clearAll();
     aGrid.clearAll();
+
     /*var date1 = "{{app.session.get('past')}}";
     alert(date1);
     var date2 = "{{app.session.get('future')}}" ;*/
@@ -138,16 +137,32 @@ dhtmlxEvent(window, "load", function(){
       layout.cells("b").progressOff();
     });
 
+
     dataFrameGrid.load("{{ url('Stat_job_history_xml') }}?id="+rId, function (rId) {
       //les autres
       layout.cells("c").progressOff();
     });
+
+    myFormDate.setItemValue("jobname",rId);
+    //par controller php
+
+    var xreq = new XMLHttpRequest();
+    xreq.open("GET", "{{url('get_job_name_by_id')}}?id="+rId, false );
+    xreq.send(null);
+    var job = xreq.responseText;
+    /*var xreq2 = new XMLHttpRequest();
+    xreq2.open("GET", "{{url('get_spooler_by_job_id')}}?id="+rId, false );
+    xreq2.send(null);
+    var spooler = xreq2.responseText;
+    */
+    myFormDate.setItemValue("jobname", job);
+    //myFormDate.setItemValue("spooler", spooler);
+
+
   });
 
 
   //dataFrameGrid.load("{{url('dataframe_xml')}}");
-
-
 
   //table of stat
   statGrid = tabbar.cells("a1").attachGrid();
@@ -192,12 +207,14 @@ dhtmlxEvent(window, "load", function(){
 
     myFormDate.attachEvent("onButtonClick",function(id){
 
-      jobname = myFormDate.getInput("jobname").value;
-      spooler = myFormDate.getInput("spooler").value;
-
 
       switch (id) {
         case 'proceed':
+           var jobname = myFormDate.getInput("jobname").value;
+           var spooler = myFormDate.getInput("spooler").value;
+           //      var type    = myFormDate.getInput("type").value;
+           var type = myFormDate.getCombo("choice").getSelectedValue();
+
            //layout1.cells("b").progressOn();
            calFrom = myFormDate.getCalendar("start_date");
            calTo = myFormDate.getCalendar("end_date");
@@ -205,7 +222,7 @@ dhtmlxEvent(window, "load", function(){
            var date1 = calFrom.getFormatedDate();
            if (jobname != ""){
              //alert(jobname);
-             DateRefresh(date1, date2, jobname, spooler);
+             DateRefresh(date1, date2, type, jobname, spooler);
            }else{
              DateRefresh(date1, date2);
            }
@@ -217,7 +234,7 @@ dhtmlxEvent(window, "load", function(){
     });
 
 
-    function DateRefresh(date1, date2, name = "", spooler = ""){
+    function DateRefresh(date1, date2, type, name = "", spooler = ""){
       layout1.cells("b").progressOn();
       //alert("from "+date1+" to "+date2);
       var tmp = "true"
@@ -232,7 +249,7 @@ dhtmlxEvent(window, "load", function(){
         //route2 = route.replace("var", false);
       }else{
         //requete avec le where job
-        var route2 = "{{ url('Stat_job_xml') }}?jobname="+name+"&spooler="+spooler;
+        var route2 = "{{ url('Stat_job_xml') }}?jobname="+name+"&spooler="+spooler+"&type="+type;
       }
 
       jobGrid.load(route2,function(){

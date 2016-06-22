@@ -23,10 +23,12 @@ class DataController extends Controller
   }
 
 
-  public function describeAction(){
+  public function describeAction(Request $request){
 
-    $request = Request::createFromGlobals();
-    $session = $this->container->get('arii_core.session');
+    //$request = Request::createFromGlobals();
+    //$session = $this->container->get('arii_core.session');
+
+    $session = $request->getSession();
 
     $id       = $request->query->get('id');
     $from     = $request->query->get('from');
@@ -46,6 +48,8 @@ class DataController extends Controller
     $spooler =  $Infos['SPOOLER_ID'];
     $name    =  $Infos['JOB_NAME'];
 
+
+    //echo $request->getSession()->get('currentJob');
     $dbname   = $database['dbname'];
     $user     = $database['user'];
     $host     = $database['host'];
@@ -53,7 +57,7 @@ class DataController extends Controller
 
 
     if($name == null){
-      echo " probleme de db ";
+      echo "Failled to load Job_Name ";
     }
 
     //echo $spooler;
@@ -71,6 +75,9 @@ class DataController extends Controller
     //echo passthru($query1, $status);
     //echo $status;
 
+
+    $request->getSession()->set('currentJob', $name);
+    $request->getSession()->set('currentSpooler', $spooler );
 
     $response = new Response();
     $response->headers->set('Content-Type', 'text/xml');
