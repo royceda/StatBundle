@@ -66,6 +66,12 @@ Stat_jobs_xml:
   path: /jobs_xml
   defaults: { _controller: StatBundle:Default:jobs }
 
+
+Stat_job_xml:
+  path: /job_xml
+  defaults: { _controller: StatBundle:Default:job}
+
+
 Stat_jobs_date_xml:
   path: /jobs_xml_date/from={date1}/to={date2}
   defaults: { _controller: StatBundle:Default:datedJobs}
