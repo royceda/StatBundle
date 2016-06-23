@@ -12,7 +12,7 @@ dhtmlxEvent(window, "load", function(){
 
 
   layout1.cells("a").setText("Menu");
-  layout1.cells("a").setHeight(220);
+  layout1.cells("a").setHeight(370);
 
   globalMenu = layout1.cells("a").attachMenu();
   globalMenu.setIconsPath( "{{ asset('/bundles/ariicore/images/menu/') }}" );
@@ -127,6 +127,16 @@ dhtmlxEvent(window, "load", function(){
     var date1 = calFrom.getFormatedDate();
     //alert(date1);
 
+    var xreq = new XMLHttpRequest();
+    xreq.open("GET", "{{url('get_job_name_by_id')}}?id="+rId, false );
+    xreq.send(null);
+    var job = xreq.responseText;
+    var xreq2 = new XMLHttpRequest();
+    xreq2.open("GET", "{{url('get_spooler_by_job_id')}}?id="+rId, false );
+    xreq2.send(null);
+    var spooler = xreq2.responseText;
+
+
     statGrid.load("{{ url('describe_xml') }}?id="+rId+"&from="+date1+"&to="+date2, function (rId) {
       aGrid.load("{{ url('anomaly_xml')}}");
       aLayout.cells("a").attachURL("{{url('pie_chart')}}");
@@ -146,14 +156,6 @@ dhtmlxEvent(window, "load", function(){
     myFormDate.setItemValue("jobname",rId);
     //par controller php
 
-    var xreq = new XMLHttpRequest();
-    xreq.open("GET", "{{url('get_job_name_by_id')}}?id="+rId, false );
-    xreq.send(null);
-    var job = xreq.responseText;
-    var xreq2 = new XMLHttpRequest();
-    xreq2.open("GET", "{{url('get_spooler_by_job_id')}}?id="+rId, false );
-    xreq2.send(null);
-    var spooler = xreq2.responseText;
 
     myFormDate.setItemValue("jobname", job);
     myFormDate.setItemValue("spooler", spooler);
