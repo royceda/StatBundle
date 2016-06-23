@@ -6,7 +6,6 @@ import psycopg2
 import time
 import math
 import calendar
-from config import *
 
 date_format = "%Y-%m-%d %H:%M:%S"
 
@@ -62,7 +61,7 @@ def dfDescribe2xml(df):
         str1 += '<cell>'+arr1[i]+'</cell>';
         for j in range(0, len(arr)):
             #str1 += '<cell>'+arr[j]+'</cell>';
-            str1 += '<cell>'+str(df[arr1[i]][arr[j]])+'</cell>';
+            str1 += '<cell>'+str(float("{0:.2f}".format(df[arr1[i]][arr[j]])))+'</cell>';
         str1 += '</row>'
     str1 += '</rows>';
     return str1;

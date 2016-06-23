@@ -72,6 +72,8 @@ class DataController extends Controller
     //echo $query;
 
     $output = system($query);
+
+
     //echo passthru($query1, $status);
     //echo $status;
 

@@ -101,18 +101,10 @@ public function jobsAction(Request $request){
       //job name
       //$request = Request::createFromGlobals();
       $id = $request->query->get('id');
-      $dhtmlx = $this->container->get('arii_core.dhtmlx');
-      $sql = $this->container->get('arii_core.sql');
-      $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
-            .$sql->From(array('SCHEDULER_HISTORY h'));
-      $qry .= $sql->Where(array('h.ID'=>$id));
 
-      $data = $dhtmlx->Connector('data');
-      $res = $data->sql->query( $qry );
-      $Infos = $data->sql->get_next($res);
-
-      $spooler =  $Infos['SPOOLER_ID'];
-      $job     =  $Infos['JOB_NAME'];
+      $arr = $this->getInfos($id);
+      $job = $arr['job'];
+      $spooler = $arr['spooler'];
 
 
       $ordered = $request->get('chained');
@@ -156,7 +148,7 @@ public function jobsAction(Request $request){
             if($spooler != null){
               $query .= "and h.\"SPOOLER_ID\" like '%".$spooler."%'";
             }
-            $query .= "and h.\"START_TIME\" between '".$from."' and '".$to."'";
+            $query .= "and h.\"START_TIME\" between '".$from."' and '".$to."' limit 10";
             //echo $query;
           }else if($type == "equal"){
             $id = $request->query->get('id');
@@ -243,22 +235,14 @@ public function jobsAction(Request $request){
 
       public function getNameAction(Request $request){
         $id = $request->query->get('id');
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $sql = $this->container->get('arii_core.sql');
-        $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
-              .$sql->From(array('SCHEDULER_HISTORY h'));
-        $qry .= $sql->Where(array('h.ID'=>$id));
 
-        $data = $dhtmlx->Connector('data');
-        $res = $data->sql->query( $qry );
-        $Infos = $data->sql->get_next($res);
-
-        $spooler =  $Infos['SPOOLER_ID'];
-        $job     =  $Infos['JOB_NAME'];
-
+        $arr = $this->getInfos($id);
+        $job = $arr['job'];
+        $spooler = $arr['spooler'];
 
         $request->getSession()->set('currentJob', $job);
         $request->getSession()->set('currentSpooler', $spooler );
+
         $response = new Response();
         $response->headers->set('Content-Type', 'text');
         $response->setContent( $job );
@@ -267,18 +251,10 @@ public function jobsAction(Request $request){
 
       public function getSpoolerAction(Request $request){
         $id = $request->query->get('id');
-        $dhtmlx = $this->container->get('arii_core.dhtmlx');
-        $sql = $this->container->get('arii_core.sql');
-        $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
-              .$sql->From(array('SCHEDULER_HISTORY h'));
-        $qry .= $sql->Where(array('h.ID'=>$id));
 
-        $data = $dhtmlx->Connector('data');
-        $res = $data->sql->query( $qry );
-        $Infos = $data->sql->get_next($res);
-
-        $spooler =  $Infos['SPOOLER_ID'];
-        $job     =  $Infos['JOB_NAME'];
+        $arr = $this->getInfos($id);
+        $job = $arr['job'];
+        $spooler = $arr['spooler'];
 
         $request->getSession()->set('currentJob', $job);
         $request->getSession()->set('currentSpooler', $spooler );
@@ -288,5 +264,26 @@ public function jobsAction(Request $request){
         $response->setContent($spooler);
         return $response;
       }
+
+
+      private function getInfos($id){
+        //$id = $request->query->get('id');
+        $dhtmlx = $this->container->get('arii_core.dhtmlx');
+        $sql = $this->container->get('arii_core.sql');
+        $qry = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
+              .$sql->From(array('SCHEDULER_HISTORY h'));
+        $qry .= $sql->Where(array('h.ID'=>$id));
+
+        $data = $dhtmlx->Connector('data');
+        $res = $data->sql->query( $qry );
+        $Infos = $data->sql->get_next($res);
+
+        $spooler =  $Infos['SPOOLER_ID'];
+        $job     =  $Infos['JOB_NAME'];
+
+        return array("job" => $job, "spooler" => $spooler);
+      }
+
+
 
   }

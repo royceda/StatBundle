@@ -87,5 +87,5 @@ get_job_name_by_id:
   defaults: {_controller: StatBundle:Default:getName}
 
 get_spooler_by_job_id:
-  path: /job_name/
-  defaults: {_controller: StatBundle:Default: getSpooler}
+  path: /job_spooler/
+  defaults: {_controller: StatBundle:Default:getSpooler}

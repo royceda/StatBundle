@@ -150,15 +150,13 @@ dhtmlxEvent(window, "load", function(){
     xreq.open("GET", "{{url('get_job_name_by_id')}}?id="+rId, false );
     xreq.send(null);
     var job = xreq.responseText;
-    /*var xreq2 = new XMLHttpRequest();
+    var xreq2 = new XMLHttpRequest();
     xreq2.open("GET", "{{url('get_spooler_by_job_id')}}?id="+rId, false );
     xreq2.send(null);
     var spooler = xreq2.responseText;
-    */
+
     myFormDate.setItemValue("jobname", job);
-    //myFormDate.setItemValue("spooler", spooler);
-
-
+    myFormDate.setItemValue("spooler", spooler);
   });
 
 
