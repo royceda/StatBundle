@@ -14,6 +14,8 @@ host/job_spooler/?id=21166385
 host/describe?id=21166385&from=2016-06-20%2010:33&to=2016-06-28%2010:33
 ```
 
+- from : beginning date of your search (format yy/mm/dd HH:MM)
+- to   : end date of your search (format yy/mm/dd HH:MM)
 
 # Job's history
 
@@ -35,7 +37,8 @@ host/anomaly
 
 ```
 host/job_xml?jobname=HPI/HPIP_00001_BACKUPDB&spooler=jstech&type=like
-````
+```
+
 - jobname 
 - spooler : spooler name where you make your search
 - type: like or equal 
