@@ -217,7 +217,7 @@ public function jobsAction(Request $request){
             $list .='<cell>'.$job['runs'][0]['dbid'].'</cell>';
           }
           $list .='<cell>'.$job['spooler'].'</cell>';
-          $list .='<cell>'.$job['name'].'</cell>';
+          $list .='<cell>'.$job['folder'].'/'.$job['name'].'</cell>';
           if (isset($job['runs'])) {
             $list .='<cell>'.$job['runs'][0]['start'].'</cell>';
             $list .='<cell>'.$job['runs'][0]['duration'].'</cell>';
@@ -287,7 +287,7 @@ public function jobsAction(Request $request){
 
 
       public function miniHelpAction(){
-          return $this->render('StatBundle:Default:mini_help.html.twig');
+          return $this->render('StatBundle:Help:mini_help.html.twig');
       }
 
       public function helpAction(){
