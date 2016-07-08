@@ -403,6 +403,6 @@ def study_frame_pred(df, start, end,  period="month", tab = []):
     #frame['num']    = pd.Series(num)
     frame['anormal'] = pd.Series(numAnormal)
     frame['pred'] = pd.Series(means).interpolate(method='pchip', limit_direction='both')
-    #frame['pred'] = pd.Series(means).interpolate(method='spline', order=3, limit_direction='both')
+    #frame['pred'] = pd.Series(means).interpolate(method='spline', order=4, limit_direction='both')
 
     return frame

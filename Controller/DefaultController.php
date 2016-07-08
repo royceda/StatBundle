@@ -286,4 +286,12 @@ public function jobsAction(Request $request){
 
 
 
+      public function miniHelpAction(){
+          return $this->render('StatBundle:Default:mini_help.html.twig');
+      }
+
+      public function helpAction(){
+          return $this->render('StatBundle:Help:help.html.twig');
+      }
+
   }

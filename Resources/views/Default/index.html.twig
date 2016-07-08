@@ -19,19 +19,25 @@ dhtmlxEvent(window, "load", function(){
   globalMenu.loadStruct("{{ url('xml_menu') }}?route={{ app.request.attributes.get('_route') }}");
 
 
+
   myTabs = layout1.cells("a").attachTabbar();
   myTabs.addTab("a1","{{ "Welcome" | trans }}","100px", null, true);
   myTabs.addTab("a2","{{ "Advanced" | trans }}","100px", null, true);
+
 
   myRibbon = myTabs.cells("a1").attachRibbon();
   myRibbon.setIconPath( "{{ asset('bundles/ariicore/images/ribbon/') }}" );
   myRibbon.loadStruct("{{ url('json_JID_ribbon') }}");
   myRibbon.attachEvent("onStateChange", StateRibbon );
   myRibbon.attachEvent("onClick", ClickRibbon);
+
+  myTabs.cells("a1").attachURL("{{url('stat_mini_help')}}");
+
   //il y a un petit bug quand on change de db
   myTabs.cells("a1").setActive();
   myFormDate = myTabs.cells("a2").attachForm();
   myFormDate.loadStruct("{{url('xml_Stat_date_form')}}?first=true");
+
 
 
 

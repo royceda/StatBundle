@@ -89,3 +89,15 @@ get_job_name_by_id:
 get_spooler_by_job_id:
   path: /job_spooler/
   defaults: {_controller: StatBundle:Default:getSpooler}
+
+
+#Help
+
+stat_mini_help:
+  path: /minihelp/
+  defaults: {_controller: StatBundle:Default:miniHelp}
+
+
+stat_help:
+  path: /help
+  defaults: {_controller: StatBundle:Default:help}
