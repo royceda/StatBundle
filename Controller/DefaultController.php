@@ -114,7 +114,7 @@ public function jobsAction(Request $request){
       $Jobs = $history->Jobs(0, 1, $stopped, false, $job, $spooler);
 
       //print_r($Jobs);
-      $list = $this->productXML($Jobs, false);
+      $list = $this->productXML($Jobs, false, "history");
 
       //$this->get('session')->set('currentJob', $job);
       //$this->get('session')->set('currentSpooler', $spooler);
@@ -150,15 +150,25 @@ public function jobsAction(Request $request){
             }
             $query .= "and h.\"START_TIME\" between '".$from."' and '".$to."' limit 10";
             //echo $query;
+            $only = false;
           }else if($type == "equal"){
+
             $id = $request->query->get('id');
             $dhtmlx = $this->container->get('arii_core.dhtmlx');
             $sql = $this->container->get('arii_core.sql');
             $query = $sql->Select(array('h.SPOOLER_ID','h.JOB_NAME'))
-                  .$sql->From(array('SCHEDULER_HISTORY h'));
-            $query .= $sql->Where(array('h.ID'=>$jobname));
+                    .$sql->From(array('SCHEDULER_HISTORY h'));
+
+            //echo $query;
+            if($spooler != null){
+              $query .= $sql->Where(array('h.JOB_NAME'=>$jobname, 'h.SPOOLER_ID'=>$spooler));
+            }else{
+              $query .= $sql->Where(array('h.JOB_NAME'=>$jobname));
+            }
+
+            $only = true;
           }
-          $only = true;
+
         }else{
           return $this->jobsAction($request);
         }
@@ -170,6 +180,7 @@ public function jobsAction(Request $request){
         }catch (Exception $e){
           echo $e->getMessage();
         }
+
         $Infos = $data->sql->get_next($res);
 
         $spooler =  $Infos['SPOOLER_ID'];
@@ -193,7 +204,7 @@ public function jobsAction(Request $request){
 
 
 
-      private function productXML($Jobs, $only){
+      private function productXML($Jobs, $only, $type="list"){
         //response
         $list = '<?xml version="1.0" encoding="UTF-8"?>';
         $list .= "<rows>\n";
@@ -213,9 +224,11 @@ public function jobsAction(Request $request){
             $status = 'UNKNOW';
           }
           $list .='<row id="'.$job['runs'][0]['dbid'].'" style="background-color: '.$this->ColorStatus[$status].'">';
-          if($only == false){
+
+          if($type == "history"){
             $list .='<cell>'.$job['runs'][0]['dbid'].'</cell>';
           }
+
           $list .='<cell>'.$job['spooler'].'</cell>';
           $list .='<cell>'.$job['folder'].'/'.$job['name'].'</cell>';
           if (isset($job['runs'])) {
@@ -225,9 +238,9 @@ public function jobsAction(Request $request){
 
           $list .= '<cell>'." ".'</cell>';
           $list .='</row>';
-        /*  if($only == true){
+          if($only == true){
             break;
-          }*/
+          }
         }
         $list .= "</rows>\n";
         return $list;

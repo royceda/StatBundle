@@ -13,9 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 class DataController extends Controller
 {
   /* DATA */
-
-
-
   public function dataframeAction(){
     $response = new Response();
     $response->headers->set('Content-Type', 'text/xml');
