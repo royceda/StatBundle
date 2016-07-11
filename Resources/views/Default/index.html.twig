@@ -210,25 +210,24 @@ dhtmlxEvent(window, "load", function(){
 
 
     myFormDate.attachEvent("onButtonClick",function(id){
-
-
+      //layout1.cells("b").progressOn();
       switch (id) {
         case 'proceed':
            var jobname = myFormDate.getInput("jobname").value;
            var spooler = myFormDate.getInput("spooler").value;
-           //      var type    = myFormDate.getInput("type").value;
-           var type = myFormDate.getCombo("choice").getSelectedValue();
+           var limit   = myFormDate.getInput("limit").value;
+           var type    = myFormDate.getCombo("choice").getSelectedValue();
 
-           //layout1.cells("b").progressOn();
-           calFrom = myFormDate.getCalendar("start_date");
-           calTo = myFormDate.getCalendar("end_date");
-           var date2 = calTo.getFormatedDate();
-           var date1 = calFrom.getFormatedDate();
+           calFrom     = myFormDate.getCalendar("start_date");
+           calTo       = myFormDate.getCalendar("end_date");
+           var date2   = calTo.getFormatedDate();
+           var date1   = calFrom.getFormatedDate();
+
            if (jobname != ""){
              //alert(jobname);
-             DateRefresh(date1, date2, type, jobname, spooler);
+             DateRefresh(date1, date2, limit, type, jobname, spooler);
            }else{
-             DateRefresh(date1, date2);
+             DateRefresh(date1, date2, limit);
            }
            break;
         default:
@@ -238,7 +237,7 @@ dhtmlxEvent(window, "load", function(){
     });
 
 
-    function DateRefresh(date1, date2, type, name = "", spooler = ""){
+    function DateRefresh(date1, date2, limit = "1000", type="",  name = "", spooler = ""){
       layout1.cells("b").progressOn();
       //alert("from "+date1+" to "+date2);
       var tmp = "true"
@@ -249,11 +248,11 @@ dhtmlxEvent(window, "load", function(){
 
       if(name == ""){
         //a changer car duplication de code de refresh
-        var route2 = "{{ url('Stat_jobs_xml') }}";
+        var route2 = "{{ url('Stat_jobs_xml') }}?limit="+limit;
         //route2 = route.replace("var", false);
       }else{
         //requete avec le where job
-        var route2 = "{{ url('Stat_job_xml') }}?jobname="+name+"&spooler="+spooler+"&type="+type;
+        var route2 = "{{ url('Stat_job_xml') }}?jobname="+name+"&spooler="+spooler+"&type="+type+"&limit="+limit;
       }
 
       jobGrid.load(route2,function(){

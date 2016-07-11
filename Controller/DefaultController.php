@@ -36,9 +36,11 @@ public function jobsAction(Request $request){
         $history_max = $request->get('history');
       }
       $stopped = $request->get('only_warning');
-
+      $limit = intval($request->query->get('limit'));
       $history = $this->container->get('arii_jid.history');
-      $Jobs = $history->Jobs(0, 1, $stopped, false);
+
+
+      $Jobs = $history->Jobs(0, 1, $stopped, false, "", "", $limit);
 
       $tools = $this->container->get('arii_core.tools');
 
@@ -101,6 +103,8 @@ public function jobsAction(Request $request){
       //job name
       //$request = Request::createFromGlobals();
       $id = $request->query->get('id');
+      $limit = $request->query->get('limit');
+
 
       $arr = $this->getInfos($id);
       $job = $arr['job'];
@@ -110,8 +114,9 @@ public function jobsAction(Request $request){
       $ordered = $request->get('chained');
       $stopped = $request->get('only_warning');
 
+
       $history = $this->container->get('arii_jid.history');
-      $Jobs = $history->Jobs(0, 1, $stopped, false, $job, $spooler);
+      $Jobs = $history->Jobs(0, 1, $stopped, false, $job, $spooler, $limit);
 
       //print_r($Jobs);
       $list = $this->productXML($Jobs, false, "history");
@@ -134,11 +139,10 @@ public function jobsAction(Request $request){
         $request = Request::createFromGlobals();
         $jobname = $request->query->get('jobname');
         $spooler = $request->query->get('spooler');
+        $type    = $request->query->get('type');
+        $from    = $this->get('session')->get('past');
+        $to      = $this->get('session')->get('future');
 
-        $type = $request->query->get('type');
-
-        $from = $this->get('session')->get('past');
-        $to = $this->get('session')->get('future');
 
         if($jobname != null ){
           if($type == "like"){
@@ -148,7 +152,7 @@ public function jobsAction(Request $request){
             if($spooler != null){
               $query .= "and h.\"SPOOLER_ID\" like '%".$spooler."%'";
             }
-            $query .= "and h.\"START_TIME\" between '".$from."' and '".$to."' limit 10";
+            $query .= "and h.\"START_TIME\" between '".$from."' and '".$to."' limit 1";
             //echo $query;
             $only = false;
           }else if($type == "equal"){
